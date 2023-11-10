@@ -1,4 +1,4 @@
-import { HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -28,7 +28,12 @@ export class UserService {
       });
 
 
-      const savedUser = await createdUser.save();
+      const savedUser = await createdUser.save()
+        .catch(err => {
+          console.log(err);
+          if (err && err.code == 11000) throw new BadRequestException('This username already exisits!')
+          else throw new InternalServerErrorException('Unexpected error while creating the user')
+        })
 
 
       const token = this.generateToken(savedUser, { expiresIn: '1d' });
