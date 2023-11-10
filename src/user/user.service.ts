@@ -8,11 +8,13 @@ import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
 import { PasswordService } from 'src/password/password.service';
 
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
+    private passwordService: PasswordService
   ) { }
   async register(createUserDto: CreateUserDto) {
     try {
@@ -49,7 +51,7 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await PasswordService.comparePasswords(password, user.password);
+    const isPasswordValid = await this.passwordService.comparePasswords(password, user.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
