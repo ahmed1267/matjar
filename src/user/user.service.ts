@@ -60,13 +60,25 @@ export class UserService {
 
 
   async signIn(email: string, password: string) {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email })
+      .catch(err => {
+        console.log(err);
+        if (err && err.code == 404) {
+          console.log(err);
 
+          throw new BadRequestException('This email doesnt exisit!')
+        }
+        else throw new InternalServerErrorException('Unexpected error while logging in')
+      })
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('This email doesnt exist!')
     }
 
-    const isPasswordValid = await this.passwordService.comparePasswords(password, user.password);
+    const isPasswordValid = await this.passwordService.comparePasswords(password, user.password)
+      .catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('Unexpected error while logging in')
+      });
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
