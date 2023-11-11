@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import * as bcrypt from 'bcrypt';
 
 // Enum for user roles
 export enum UserRole {
@@ -17,8 +16,6 @@ export type UserDocument = User & Document;
     timestamps: true, // Add timestamps for createdAt and updatedAt
 })
 export class User {
-    @Prop({ required: true, unique: true }) // Ensure username is required and unique
-    username: string;
 
     @Prop({ required: true }) // Ensure name is required
     name: string;
@@ -29,9 +26,11 @@ export class User {
     @Prop({ required: true, enum: UserRole, default: UserRole.USER }) // Add the role property
     role: UserRole;
 
-    // async comparePassword(candidatePassword: string): Promise<boolean> {
-    //     return bcrypt.compare(candidatePassword, this.password);
-    // }
+    @Prop({ required: true, unique: true })
+    email: string;
+
+    @Prop({ required: true, unique: true })
+    phone: String;
 }
 
 // Create the Mongoose schema for the user class

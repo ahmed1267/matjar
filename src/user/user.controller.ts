@@ -8,6 +8,7 @@ export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @Post('register')
+  @UsePipes(new ValidationPipe({ transform: true }))
   register(@Body() createUserDto: CreateUserDto) {
     return this.userService.register(createUserDto);
   }
@@ -15,10 +16,10 @@ export class UserController {
   @Post('signin')
   @UsePipes(ValidationPipe)
   async signIn(
-    @Body('username') username: string,
+    @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return this.userService.signIn(username, password);
+    return this.userService.signIn(email, password);
   }
 
   @Get()

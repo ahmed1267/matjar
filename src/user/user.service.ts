@@ -31,7 +31,11 @@ export class UserService {
       const savedUser = await createdUser.save()
         .catch(err => {
           console.log(err);
-          if (err && err.code == 11000) throw new BadRequestException('This username already exisits!')
+          if (err && err.code == 11000) {
+            console.log(err);
+
+            throw new BadRequestException('This email or phone number already exisits!')
+          }
           else throw new InternalServerErrorException('Unexpected error while creating the user')
         })
 
@@ -49,8 +53,8 @@ export class UserService {
   }
 
 
-  async signIn(username: string, password: string) {
-    const user = await this.userModel.findOne({ username });
+  async signIn(email: string, password: string) {
+    const user = await this.userModel.findOne({ email });
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -87,7 +91,7 @@ export class UserService {
 
   private generateToken(user: UserDocument, options?: any): string {
 
-    const payload = { sub: user._id, username: user.username };
+    const payload = { sub: user._id, email: user.email };
     return this.jwtService.sign(payload, options);
   }
 }

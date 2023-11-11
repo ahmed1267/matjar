@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsArray, IsDateString, Validate, MinLength, MaxLength, IsEnum } from 'class-validator';
+import { Prop } from '@nestjs/mongoose';
+import { IsNotEmpty, IsString, IsArray, IsDateString, Validate, MinLength, MaxLength, IsEnum, IsEmail, IsPhoneNumber, Matches } from 'class-validator';
 
 export enum UserRole {
     admin = 'admin',
@@ -11,13 +12,6 @@ export class CreateUserDto {
     @IsString({ message: 'A user must have a string title' })
     name: string;
 
-    // User username, must not be empty, and should be a string
-    @IsNotEmpty({ message: 'A user must have a username' })
-    @IsString({ message: 'A user must have a string username' })
-    @MinLength(6, { message: 'A user username must be 6 chracters minimum' })
-    @MaxLength(20, { message: 'A user username must be 20 chracters maximum' })
-    username: string;
-
     // User password, must not be empty, and should be a valid date string
     @IsNotEmpty({ message: 'A user must have a password' })
     @IsString({ message: 'A user must have a string password' })
@@ -29,4 +23,14 @@ export class CreateUserDto {
     @IsNotEmpty({ message: 'A user must have a role' })
     @IsEnum(UserRole, { message: 'Invalid user role' })
     role: UserRole;
+
+    @Prop({ required: true, unique: true })
+    @IsNotEmpty({ message: 'Email is required' })
+    @IsEmail()
+    email: string;
+
+    @Prop({ required: true, unique: true })
+    @IsNotEmpty({ message: 'Phone number is required' })
+    @Matches(/^(\+\d{1,3}[- ]?)?\d{10}$/, { message: 'Invalid phone number format' })
+    phone: string;
 }
