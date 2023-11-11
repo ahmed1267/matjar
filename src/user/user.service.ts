@@ -19,6 +19,12 @@ export class UserService {
   async register(createUserDto: CreateUserDto) {
     try {
 
+      const { email } = createUserDto;
+      const foundUser = await this.userModel.findOne({ email })
+      if (foundUser) {
+        throw new UnauthorizedException('There is a user with the same email!');
+      }
+
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
 
