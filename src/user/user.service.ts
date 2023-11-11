@@ -62,8 +62,10 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    const userResponse = { ...user.toObject(), password: undefined };
+
     const token = this.generateToken(user, { expiresIn: '1d' });
-    return { token };
+    return { token, userResponse };
   }
 
 
