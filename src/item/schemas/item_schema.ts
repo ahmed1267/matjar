@@ -6,7 +6,7 @@ export enum Category {
     ACCSESSORIES = 'accessories',
     HOME = 'home',
     GYM = 'gym',
-    OTHERS= 'others'
+    OTHERS = 'others'
 }
 
 // Define the document type for the user schema
@@ -27,12 +27,12 @@ export class Item {
     @Prop({ required: true })
     image: String;
 
-    @Prop({ required: true})
+    @Prop({ required: true })
     description: String;
 
-    @Prop({required: true})
+    @Prop({ required: true })
     quantity: Number;
 }
 
 // Create the Mongoose schema for the user class
-export const UserSchema = SchemaFactory.createForClass(Item);
+export const ItemSchema = SchemaFactory.createForClass(Item);
