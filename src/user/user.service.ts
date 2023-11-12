@@ -66,7 +66,7 @@ export class UserService {
         if (err && err.code == 404) {
           console.log(err);
 
-          throw new BadRequestException('This email doesnt exisit!')
+          throw new BadRequestException('This email doesnt exist!')
         }
         else throw new InternalServerErrorException('Unexpected error while logging in')
       })
@@ -81,7 +81,7 @@ export class UserService {
       });
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect password!');
     }
 
     const userResponse = { ...user.toObject(), password: undefined };
@@ -91,8 +91,14 @@ export class UserService {
   }
 
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    const foundUsers= await this.findAll()
+    .catch(err => {
+      console.log(err);
+      throw new InternalServerErrorException('Unexpected error while logging in')
+    });
+
+    return foundUsers
   }
 
   findOne(id: number) {
