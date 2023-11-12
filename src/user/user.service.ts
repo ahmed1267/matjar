@@ -40,7 +40,7 @@ export class UserService {
           if (err && err.code == 11000) {
             console.log(err);
 
-            throw new BadRequestException('This email or phone number already exisits!')
+            throw new BadRequestException('There is a user with the same phone number!')
           }
           else throw new InternalServerErrorException('Unexpected error while creating the user')
         })
