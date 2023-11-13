@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('item')
 export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
+  constructor(private readonly itemService: ItemService) { }
 
   @Post()
   create(@Body() createItemDto: CreateItemDto) {
@@ -13,8 +14,8 @@ export class ItemController {
   }
 
   @Get()
-  findAll() {
-    return this.itemService.findAll();
+  findAll(@Query() query: ExpressQuery): Promise<Object> {
+    return this.itemService.findAll(query);
   }
 
   @Get(':id')

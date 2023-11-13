@@ -8,6 +8,20 @@ export enum UserRole {
     SHOP_OWNER = 'shop_owner',
 }
 
+export enum UserExperienceType {
+    STORE = 'store',
+    SOCIALMEDIA = 'social_media'
+}
+
+export enum ReadyOption {
+    PRODUCTS = 'products',
+    DESIGN = 'design',
+    STATEMENTS = 'statements',
+    PAYMENTS = 'payments',
+    LOGISTICS = 'logistics',
+    DIGITAL_MARKETING = 'digital_marketing',
+}
+
 // Define the document type for the user schema
 export type UserDocument = User & Document;
 
@@ -30,7 +44,19 @@ export class User {
     email: string;
 
     @Prop({ required: true, unique: true })
-    phone: String;
+    phone: string;
+
+    @Prop({ required: true, default: false })
+    experience: Boolean
+
+    @Prop({ required: true, default: false })
+    firstShop: Boolean
+
+    @Prop({ required: true, enum: UserExperienceType, default: UserExperienceType.STORE })
+    experienceType: string
+
+    @Prop({ required: true, enum: ReadyOption, isArray: true })
+    ready: ReadyOption[];
 }
 
 // Create the Mongoose schema for the user class
