@@ -9,15 +9,23 @@ import { ItemModule } from './item/item.module';
 import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
 import { PasswordService } from './password/password.service';
+import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from './auth/strategies/jwt-strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [ConfigModule.forRoot({
     envFilePath: '.env',
     isGlobal: true
+  }), JwtModule.register({
+    secret: `${process.env.SECRET}`,
+    signOptions: { expiresIn: '1d' },
+    global: true
   }),
   MongooseModule.forRoot(process.env.DB_URI),
-    ShopModule, UserModule, ItemModule, OrderModule, CustomerModule],
+    ShopModule, UserModule, ItemModule, OrderModule, CustomerModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, PasswordService],
+  providers: [AppService, PasswordService, JwtStrategy, PassportModule],
 })
 export class AppModule { }

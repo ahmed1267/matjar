@@ -17,6 +17,7 @@ export class CreateUserDto {
     password: string;
 
     // User Role, must not be empty and should be of the current options
+    @Prop({ required: true })
     @IsNotEmpty({ message: 'A user must have a role' })
     @IsEnum(UserRole, { message: 'Invalid user role' })
     role: UserRole;

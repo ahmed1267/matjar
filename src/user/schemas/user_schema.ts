@@ -55,8 +55,10 @@ export class User {
     @Prop({ required: true, enum: UserExperienceType, default: UserExperienceType.STORE })
     experienceType: string
 
-    @Prop({ required: true, enum: ReadyOption, isArray: true })
+    @Prop({ type: [{ type: String, enum: ReadyOption }], isArray: true })
     ready: ReadyOption[];
+
+
 }
 
 // Create the Mongoose schema for the user class

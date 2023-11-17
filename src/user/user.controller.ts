@@ -1,11 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes, Res, Redirect, Request, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService) { }
 
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -13,32 +18,32 @@ export class UserController {
     return this.userService.register(createUserDto);
   }
 
-  @Post('signin')
+  @Post('login')
   @UsePipes(ValidationPipe)
-  async signIn(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
-    return this.userService.signIn(email, password);
-  }
+  @Redirect('/auth/login')
+  async login(@Request() req) { }
 
+  @UseGuards(JwtGuard)
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() query: ExpressQuery) {
+    return this.userService.findAll(query);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @UseGuards(JwtGuard)
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(updateUserDto);
   }
 
+  @UseGuards(JwtGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  remove(@Param('id') userId: string, @Body('id') deleteId: string) {
+    return this.userService.remove(userId, deleteId);
   }
 }
