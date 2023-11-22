@@ -21,8 +21,8 @@ export class Item {
     @Prop({ required: true, unique: true }) // Ensure name is required
     name: string;
 
-    @Prop({ required: true, enum: Category, default: Category.OTHERS }) // Add the role property
-    category: Category;
+    @Prop({ type: [{ type: String, enum: Category }], isArray: true, default: Category.OTHERS}) // Add the role property
+    category: Category[];
 
     @Prop({ required: true })
     image: String;
@@ -30,8 +30,6 @@ export class Item {
     @Prop({ required: true })
     description: String;
 
-    @Prop({ required: true })
-    quantity: Number;
 }
 
 // Create the Mongoose schema for the user class

@@ -6,7 +6,6 @@ import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
-import { PasswordService } from 'src/password/password.service';
 
 
 
@@ -15,7 +14,6 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
-    private passwordService: PasswordService,
   ) { }
   async register(createUserDto: CreateUserDto) {
     try {
@@ -83,6 +81,9 @@ export class UserService {
           console.log(err);
           throw new InternalServerErrorException('Unexpected error while returning user list')
         });
+        for(const user of foundUsers){
+          user.password=undefined;
+        }
 
       return { foundUsers }
     } catch (error) {
@@ -92,14 +93,15 @@ export class UserService {
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     try {
       const idValid = mongoose.isValidObjectId(id)
       if (!idValid) throw new BadRequestException('Please enter correct Id')
-      const foundUser = this.userModel.findById(id).catch(err => {
+      const foundUser = await this.userModel.findById(id).catch(err => {
         console.log(err)
         throw new NotFoundException('This user doesnt exist')
       })
+      foundUser.password=undefined;
       return foundUser;
     } catch (error) {
       console.log(error);
@@ -128,6 +130,7 @@ export class UserService {
           console.log(err)
           throw new InternalServerErrorException('Unexpected error while updating user')
         })
+        updatedUser.password=undefined;
         return updatedUser;
       } else {
         throw new UnauthorizedException('Unathorized error')

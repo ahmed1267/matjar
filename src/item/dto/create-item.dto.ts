@@ -22,15 +22,12 @@ export class CreateItemDto {
 
     // User Role, must not be empty and should be of the current options
     @IsNotEmpty({ message: 'An item must have a category' })
-    @IsEnum(Category, { message: 'Invalid item category' })
-    category: Category;
+    @IsEnum(Category, { each: true, message: 'Invalid ready option' })
+    category: Category[];
 
     @Prop({ required: true })
     @IsNotEmpty({ message: 'Image is required' })
     @IsEmail()
     image: string;
 
-    @Prop({ required: true })
-    @IsNotEmpty({ message: 'Quantity is required' })
-    quantity: number;
 }

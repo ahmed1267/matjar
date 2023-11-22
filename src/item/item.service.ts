@@ -1,8 +1,8 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Category, Item, ItemDocument } from './schemas/item_schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 
@@ -16,7 +16,14 @@ export class ItemService {
   async create(createItemDto: CreateItemDto) {
 
     try {
-
+      const {name}= createItemDto
+      const foundItem= await this.itemModel.findOne({name})
+      if(foundItem){
+        throw new HttpException(
+          'This item already exists!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const { image } = createItemDto
 
       if (!this.isValidUrl(image)) {
@@ -101,8 +108,14 @@ export class ItemService {
 
 
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: string) {
+    const idValid = mongoose.isValidObjectId(id)
+      if (!idValid) throw new BadRequestException('Please enter correct Id')
+    const foundItem= await this.itemModel.findById({id}).catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('An unexpected error happened while finding the application!')
+    })
+    return foundItem;
   }
 
   update(id: number, updateItemDto: UpdateItemDto) {

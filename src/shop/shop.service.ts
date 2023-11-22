@@ -26,7 +26,7 @@ export class ShopService {
       const idValid = mongoose.isValidObjectId(id)
       if (!idValid) throw new BadRequestException('Please enter correct Id')
 
-      const foundShop = await this.ShopModel.findById(id)
+      const foundShop = await (await this.ShopModel.findById(id)).populate('items','name')
 
       if (!foundShop) throw new NotFoundException('There is no shop with this id')
 

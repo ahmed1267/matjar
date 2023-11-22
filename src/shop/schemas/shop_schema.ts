@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-import { Document } from "mongoose";
+import { Document, SchemaType, SchemaTypes } from "mongoose";
 
 // Define the document type for the shop schema
 export type ShopDocument = Shop & Document
@@ -17,6 +17,9 @@ export class Shop {
 
     @Prop({ required: true }) // Ensure releaseDate is required
     releaseDate: Date;
+
+    @Prop({tyep: [SchemaTypes.ObjectId], ref: 'Item'})
+    items:string[];
 
 }
 

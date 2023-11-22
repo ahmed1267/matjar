@@ -8,10 +8,8 @@ import { UserModule } from './user/user.module';
 import { ItemModule } from './item/item.module';
 import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
-import { PasswordService } from './password/password.service';
 import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtStrategy } from './auth/strategies/jwt-strategy';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
@@ -26,6 +24,6 @@ import { PassportModule } from '@nestjs/passport';
   MongooseModule.forRoot(process.env.DB_URI),
     ShopModule, UserModule, ItemModule, OrderModule, CustomerModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, PasswordService, JwtStrategy, PassportModule],
+  providers: [AppService, PassportModule],
 })
 export class AppModule { }

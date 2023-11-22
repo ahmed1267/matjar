@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, SchemaTypes } from "mongoose";
 
 // Enum for user roles
 export enum UserRole {
@@ -58,6 +58,8 @@ export class User {
     @Prop({ type: [{ type: String, enum: ReadyOption }], isArray: true })
     ready: ReadyOption[];
 
+    @Prop({type: SchemaTypes.ObjectId, ref:'Shop'})
+    shop:string;
 
 }
 
