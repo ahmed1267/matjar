@@ -5,25 +5,23 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService) {
-        super({
-            usernameField: 'email',
-            passwordField: 'password',
-        });
+  constructor(private authService: AuthService) {
+    super({
+      usernameField: 'email',
+      passwordField: 'password',
+    });
+  }
+
+  async validate(username: string, password: string) {
+    const user = await this.authService
+      .validateUser(username, password)
+      .catch(() => {
+        throw new UnauthorizedException('Username or Password isnt right');
+      });
+
+    if (!user) {
+      throw new UnauthorizedException();
     }
-
-    async validate(username: string, password: string) {
-
-
-        const user = await this.authService.validateUser(username, password).catch(err => {
-            throw new UnauthorizedException('Username or Password isnt right');
-
-        });
-
-
-        if (!user) {
-            throw new UnauthorizedException();
-        }
-        return user;
-    }
+    return user;
+  }
 }
