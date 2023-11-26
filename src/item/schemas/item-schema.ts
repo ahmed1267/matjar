@@ -34,9 +34,10 @@ export class Item {
 
   @Prop({
     required: true,
+    type: [String],
     enum: [Category.ACCESSORIES, Category.GYM, Category.HOME, Category.OTHERS],
   })
-  category: string[];
+  category: Category[];
 
   @Prop()
   brand: string;
