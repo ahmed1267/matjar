@@ -61,39 +61,17 @@ export class UserService {
     }
   }
 
-  async findAll(query) {
+  async findAll(page: number = 0) {
     try {
-      const params = {
-        _limit: 3,
-        _offset: 0,
-      };
-      const currentPage = +query.page || 1;
-
-      if (query.limit) {
-        params._limit = +query.limit;
-      }
-
-      if (currentPage > 1) {
-        params._offset = (currentPage - 1) * params._limit || 0;
-      }
       const foundUsers = await this.userModel
         .find()
-        .limit(params._limit)
-        .skip(params._offset)
-        .catch((err) => {
-          console.log(err);
-          throw new InternalServerErrorException(
-            'Unexpected error while returning user list',
-          );
-        });
-      for (const user of foundUsers) {
-        user.password = undefined;
-      }
+        .limit(10)
+        .skip(page * 10);
 
-      return { foundUsers };
+      const count = await this.userModel.find().countDocuments();
+
+      return { count, foundUsers };
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.log(error);
       throw new InternalServerErrorException('An unexpected error happened!');
     }
   }

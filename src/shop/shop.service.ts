@@ -1,7 +1,15 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Shop } from './schemas/shop_schema';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+
 import * as mongoose from 'mongoose';
+
+import { Shop } from './schemas/shop_schema';
+import { InjectModel } from '@nestjs/mongoose';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateShopDto } from './dto/create-shop.dto';
 
@@ -9,42 +17,72 @@ import { CreateShopDto } from './dto/create-shop.dto';
 export class ShopService {
   constructor(
     @InjectModel(Shop.name)
-    private ShopModel: mongoose.Model<Shop>,
-  ) { }
+    private shopModel: mongoose.Model<Shop>,
+  ) {}
 
-  create(createShopDto: CreateShopDto) {
-    return 'This action adds a new shop';
+  async create(createShopDto: CreateShopDto) {
+    try {
+      const shop = await new this.shopModel(createShopDto).save();
+
+      return shop;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all shop`;
+  async findAll(page: number = 0) {
+    try {
+      const shops = await this.shopModel
+        .find()
+        .limit(10)
+        .skip(page * 10);
+
+      return shops;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   // Find a Shop by its ID
   async findOne(id: string): Promise<Shop> {
     try {
-      const idValid = mongoose.isValidObjectId(id)
-      if (!idValid) throw new BadRequestException('Please enter correct Id')
+      const idValid = mongoose.isValidObjectId(id);
+      if (!idValid) throw new BadRequestException('Please enter correct Id');
 
-      const foundShop = await (await this.ShopModel.findById(id)).populate('items','name')
+      const foundShop = await (
+        await this.shopModel.findById(id)
+      ).populate('items', 'name');
 
-      if (!foundShop) throw new NotFoundException('There is no shop with this id')
+      if (!foundShop)
+        throw new NotFoundException('There is no shop with this id');
 
-      return foundShop
-
+      return foundShop;
     } catch (error) {
-      if (error instanceof HttpException) throw error
+      if (error instanceof HttpException) throw error;
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!')
+      throw new InternalServerErrorException('An unexpected error happened!');
     }
   }
 
+  async update(id: string, updateShopDto: UpdateShopDto) {
+    try {
+      const shop = await this.shopModel.findByIdAndUpdate(id, updateShopDto, {
+        new: true,
+      });
 
-  update(id: number, updateShopDto: UpdateShopDto) {
-    return `This action updates a #${id} shop`;
+      return shop;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shop`;
+  async remove(id: string) {
+    try {
+      const shop = await this.shopModel.findByIdAndRemove(id);
+
+      return shop;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

@@ -1,11 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 
 @Controller('shop')
 export class ShopController {
-  constructor(private readonly shopService: ShopService) { }
+  constructor(private readonly shopService: ShopService) {}
 
   @Post()
   create(@Body() createShopDto: CreateShopDto) {
@@ -17,18 +26,18 @@ export class ShopController {
     return this.shopService.findAll();
   }
 
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: string) {
     return this.shopService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
-    return this.shopService.update(+id, updateShopDto);
+    return this.shopService.update(id, updateShopDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.shopService.remove(+id);
+    return this.shopService.remove(id);
   }
 }

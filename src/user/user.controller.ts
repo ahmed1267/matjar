@@ -1,16 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes, Res, Redirect, Request, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  UsePipes,
+  Redirect,
+} from '@nestjs/common';
+
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
-import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+  ) {}
 
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -21,27 +32,23 @@ export class UserController {
   @Post('login')
   @UsePipes(ValidationPipe)
   @Redirect('/auth/login')
-  async login(@Request() req) { }
+  async login() {}
 
-  @UseGuards(JwtGuard)
   @Get()
-  findAll(@Query() query: ExpressQuery) {
-    return this.userService.findAll(query);
+  findAll(@Param('page') page: number) {
+    return this.userService.findAll(page);
   }
 
-  @UseGuards(JwtGuard)
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
-  @UseGuards(JwtGuard)
   @Patch()
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto);
   }
 
-  @UseGuards(JwtGuard)
   @Delete(':id')
   remove(@Param('id') userId: string, @Body('id') deleteId: string) {
     return this.userService.remove(userId, deleteId);
