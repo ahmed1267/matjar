@@ -1,137 +1,81 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { Category, Item, ItemDocument } from './schemas/item_schema';
-import mongoose, { Model } from 'mongoose';
+import { Category, Item, ItemDocument } from './schemas/item-schema';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
-
 @Injectable()
-
 export class ItemService {
   constructor(
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
-  ) { }
+  ) {}
 
   async create(createItemDto: CreateItemDto) {
-
     try {
-      const {name}= createItemDto
-      const foundItem= await this.itemModel.findOne({name})
-      if(foundItem){
-        throw new HttpException(
-          'This item already exists!',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      const { image } = createItemDto
+      const item = await new this.itemModel(createItemDto).save();
 
-      if (!this.isValidUrl(image)) {
-        throw new BadRequestException('The image link is not valid')
-      }
-
-      const createdItem = new this.itemModel({ ...createItemDto })
-
-      const savedItem = await createdItem.save()
-        .catch(err => {
-          console.log(err);
-          if (err && err.code == 11000) {
-            console.log(err);
-
-            throw new BadRequestException('There is an item with the same name!')
-          }
-          else throw new InternalServerErrorException('Unexpected error while adding the item')
-        })
-
-      return { newItem: savedItem }
+      return item;
     } catch (err) {
-      console.log(err)
-      throw new InternalServerErrorException('Unexpected error while adding the item')
+      console.log(err);
+      throw new InternalServerErrorException(
+        'Unexpected error while adding the item',
+      );
     }
   }
 
-  async findAll(query: any): Promise<Object> {
+  async findAll(page: number = 0, userId?: string, category?: Category) {
     try {
-      // Initialize pagination parameters
-      const params = {
-        _limit: 3,
-        _offset: 0
-      }
-
-      // Extract current page from query
-      const currentPage = +(query.page) || 1
-
-      // Update limit and offset if provided in query
-      if (query.limit) {
-        params._limit = +query.limit;
-      }
-
-      if (currentPage > 1) {
-        params._offset = ((currentPage - 1) * (params._limit)) || 0;
-      }
-
-      let foundItemsPromise, totalCount = 0, foundItems
-      if (query.type) {
-        // Determine search type
-        let category = query.keyword;
-        if (category && !Object.values(Category).includes(category)) {
-          throw new BadRequestException(`Invalid category: ${category}`);
-        }
-        foundItemsPromise = this.itemModel.find({ category })
-
-      } else foundItemsPromise = this.itemModel.find()
-
-
-      foundItems = await foundItemsPromise
-        .limit(params._limit)
-        .skip(params._offset)
-        .catch(err => {
-          throw new InternalServerErrorException('An unexpected error happened while finding the items!')
+      const items = await this.itemModel
+        .find({
+          userID: userId,
+          category,
         })
+        .limit(10)
+        .skip(page * 10);
 
-
-
-      // Get total count of matching documents
-      totalCount = await this.itemModel.find({ query }).countDocuments()
-        .catch(err => {
-          throw new InternalServerErrorException('An unexpected error happened while finding the items count!')
+      const count = await this.itemModel
+        .find({
+          userID: userId,
+          category,
         })
+        .countDocuments();
 
-      return { items: foundItems, totalCount: totalCount || 0 } || {};
+      return { count, items };
     } catch (error) {
-      if (error instanceof HttpException) throw error
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!')
-
+      throw new InternalServerErrorException('An unexpected error happened!');
     }
   }
-
-
 
   async findOne(id: string) {
-    const idValid = mongoose.isValidObjectId(id)
-      if (!idValid) throw new BadRequestException('Please enter correct Id')
-    const foundItem= await this.itemModel.findById({id}).catch(err=> {
-      console.log(err)
-      throw new InternalServerErrorException('An unexpected error happened while finding the application!')
-    })
-    return foundItem;
-  }
-
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} item`;
-  }
-
-  isValidUrl = urlString => {
     try {
-      return Boolean(new URL(urlString));
+      const item = await this.itemModel.findById(id);
+      return item;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-    catch (e) {
-      return false;
+  }
+
+  async update(id: string, updateItemDto: UpdateItemDto) {
+    try {
+      const item = await this.itemModel.findByIdAndUpdate(id, updateItemDto, {
+        new: true,
+      });
+
+      return item;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async remove(id: string) {
+    try {
+      const item = await this.itemModel.findByIdAndRemove(id);
+      return item;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }
