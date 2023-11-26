@@ -37,13 +37,14 @@ export class ShopService {
         .limit(10)
         .skip(page * 10);
 
-      return shops;
+      const count = await this.shopModel.find().countDocuments();
+
+      return { count, shops };
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
 
-  // Find a Shop by its ID
   async findOne(id: string): Promise<Shop> {
     try {
       const idValid = mongoose.isValidObjectId(id);
@@ -61,6 +62,27 @@ export class ShopService {
       if (error instanceof HttpException) throw error;
       console.log(error);
       throw new InternalServerErrorException('An unexpected error happened!');
+    }
+  }
+
+  async findUserShops(userId: string, page: number = 0) {
+    try {
+      const shops = await this.shopModel
+        .find({
+          userID: userId,
+        })
+        .limit(10)
+        .skip(page * 10);
+
+      const counts = await this.shopModel
+        .find({
+          userID: userId,
+        })
+        .countDocuments();
+
+      return { counts, shops };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 
