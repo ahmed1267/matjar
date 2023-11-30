@@ -13,12 +13,10 @@ import { Order, OrderDocument } from './schemas/order_schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { User, UserDocument } from 'src/user/schemas/user_schema';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: mongoose.Model<UserDocument>,
     @InjectModel(Order.name) private readonly orderModel: mongoose.Model<OrderDocument>,
   ) {}
   async create(createOrderDto: CreateOrderDto) {
