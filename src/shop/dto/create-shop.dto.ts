@@ -8,27 +8,27 @@ import {
 
 export class CreateShopDto {
   // Shop title, must not be empty, and should be a string
-  @IsNotEmpty({ message: 'A movie must have a title' })
-  @IsString({ message: 'A movie must have a string title' })
+  @IsNotEmpty({ message: 'A shop must have a title' })
+  @IsString({ message: 'A shop must have a string title' })
   title: string;
 
-  @IsNotEmpty({ message: 'A movie must have a title' })
-  @IsString({ message: 'A movie must have a string title' })
+  @IsNotEmpty({ message: 'A shop must have a title' })
+  @IsString({ message: 'A shop must have a string title' })
   userID: string;
 
   // Shop description, must not be empty, and should be a string
-  @IsNotEmpty({ message: 'A movie must have a description' })
-  @IsString({ message: 'A movie must have a string description' })
+  @IsNotEmpty({ message: 'A shop must have a description' })
+  @IsString({ message: 'A shop must have a string description' })
   @MinLength(10, {
-    message: 'A movie description must be 10 chracters minimum',
+    message: 'A shop description must be 10 chracters minimum',
   })
   @MaxLength(150, {
-    message: 'A movie description must be 150 chracters maximum',
+    message: 'A shop description must be 150 chracters maximum',
   })
   description: string;
 
   // Shop category, must not be empty and should be an array of strings
-  @IsNotEmpty({ message: 'A movie must have at least one category' })
-  @IsArray({ message: 'A movie must have a string array category' })
+  @IsNotEmpty({ message: 'A shop must have at least one category' })
+  @IsArray({ message: 'A shop must have a string array category' })
   category: string[];
 }
