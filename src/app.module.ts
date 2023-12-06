@@ -13,17 +13,25 @@ import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    envFilePath: '.env',
-    isGlobal: true
-  }), JwtModule.register({
-    secret: `${process.env.SECRET}`,
-    signOptions: { expiresIn: '1d' },
-    global: true
-  }),
-  MongooseModule.forRoot(process.env.DB_URI),
-    ShopModule, UserModule, ItemModule, OrderModule, CustomerModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    JwtModule.register({
+      secret: `${process.env.SECRET}`,
+      signOptions: { expiresIn: '1d' },
+      global: true,
+    }),
+    MongooseModule.forRoot(process.env.DB_URI),
+    ShopModule,
+    UserModule,
+    ItemModule,
+    OrderModule,
+    CustomerModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PassportModule],
 })
-export class AppModule { }
+export class AppModule {}

@@ -15,17 +15,23 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { EmailService } from './email/email.service';
 
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private authService: AuthService,
+    private readonly emailService: EmailService,
   ) {}
 
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
-  register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body() createUserDto: CreateUserDto) {
+    await this.emailService.emailOTPCode(
+      createUserDto.email,
+      createUserDto.name,
+    );
     return this.userService.register(createUserDto);
   }
 
