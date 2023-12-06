@@ -11,6 +11,7 @@ import { CustomerModule } from './customer/customer.module';
 import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { CouponModule } from './coupon/coupon.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PassportModule } from '@nestjs/passport';
     OrderModule,
     CustomerModule,
     AuthModule,
+    CouponModule,
   ],
   controllers: [AppController],
   providers: [AppService, PassportModule],
