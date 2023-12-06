@@ -1,26 +1,72 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Coupon } from './schemas/coupon.schema';
 
 @Injectable()
 export class CouponService {
-  create(createCouponDto: CreateCouponDto) {
-    return 'This action adds a new coupon';
+  constructor(
+    @InjectModel(Coupon.name) private readonly couponModel: Model<Coupon>,
+  ) {}
+
+  async create(createCouponDto: CreateCouponDto) {
+    try {
+      const coupon = await new this.couponModel(createCouponDto).save();
+
+      return coupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all coupon`;
+  async findAll(page: number = 0, user?: Types.ObjectId) {
+    try {
+      const coupons = await this.couponModel
+        .find({
+          user,
+        })
+        .limit(10)
+        .skip(10 * page);
+
+      return coupons;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coupon`;
+  async findOne(id: Types.ObjectId) {
+    try {
+      const coupon = await this.couponModel.findById(id);
+
+      return coupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  update(id: number, updateCouponDto: UpdateCouponDto) {
-    return `This action updates a #${id} coupon`;
+  async update(id: Types.ObjectId, updateCouponDto: UpdateCouponDto) {
+    try {
+      const coupon = await this.couponModel.findByIdAndUpdate(
+        id,
+        updateCouponDto,
+        { new: true },
+      );
+
+      return coupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} coupon`;
+  async remove(id: Types.ObjectId) {
+    try {
+      const coupon = await this.couponModel.findByIdAndRemove(id);
+
+      return coupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }
