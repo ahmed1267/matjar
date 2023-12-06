@@ -28,6 +28,27 @@ export class CouponController {
     return this.couponService.findAll();
   }
 
+  @Patch('/discount')
+  changeDiscount(@Body() updateCouponDto: UpdateCouponDto) {
+    return this.couponService.changeDiscount(
+      updateCouponDto.id,
+      updateCouponDto.discountPercentage,
+    );
+  }
+
+  @Patch('/customers/add')
+  addCustomer(
+    @Body('id') id: Types.ObjectId,
+    @Body('customer') customer: Types.ObjectId,
+  ) {
+    return this.couponService.addCustomer(id, customer);
+  }
+
+  @Patch('/items/add')
+  addItem(@Body('id') id: Types.ObjectId, @Body('item') item: Types.ObjectId) {
+    return this.couponService.addItem(id, item);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: Types.ObjectId) {
     return this.couponService.findOne(id);

@@ -69,4 +69,44 @@ export class CouponService {
       throw new InternalServerErrorException(error);
     }
   }
+
+  async addCustomer(id: Types.ObjectId, customer: Types.ObjectId) {
+    try {
+      const updatedCoupon = await this.couponModel.findByIdAndUpdate(id, {
+        $push: {
+          subscriptCustomers: customer,
+        },
+      });
+
+      return updatedCoupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error, "Can't Add Customer");
+    }
+  }
+
+  async addItem(id: Types.ObjectId, item: Types.ObjectId) {
+    try {
+      const updatedCoupon = await this.couponModel.findByIdAndUpdate(id, {
+        $push: {
+          items: item,
+        },
+      });
+
+      return updatedCoupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error, "Can't Add Item");
+    }
+  }
+
+  async changeDiscount(id: Types.ObjectId, discount: number) {
+    try {
+      const coupon = await this.couponModel.findByIdAndUpdate(id, {
+        discountPercentage: discount,
+      });
+
+      return coupon;
+    } catch (error) {
+      throw new InternalServerErrorException(error, "Can't Add Item");
+    }
+  }
 }

@@ -42,10 +42,10 @@ export class Coupon {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   user: string;
 
-  @Prop({ required: true, type: [Types.ObjectId], ref: 'Item' })
+  @Prop({ required: true, type: [Types.ObjectId], ref: 'Item', maxlength: 100 })
   items: string[];
 
-  @Prop({ type: [Types.ObjectId], ref: 'Customer' })
+  @Prop({ type: [Types.ObjectId], ref: 'Customer', maxlength: 100 })
   subscriptCustomers?: Types.ObjectId[];
 }
 
