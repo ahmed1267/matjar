@@ -12,6 +12,7 @@ import { Shop } from './schemas/shop_schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateShopDto } from './dto/create-shop.dto';
+import { log } from 'console';
 
 @Injectable()
 export class ShopService {
@@ -95,6 +96,21 @@ export class ShopService {
       return shop;
     } catch (error) {
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async findShopItems(id: string){
+    try {
+      const shop = await this.shopModel.findById(id).populate('itemsIDs').exec().catch(err=> {
+        console.log(err)
+        throw new InternalServerErrorException('An expected error happened while finding shop items')
+      })
+      const items = shop.itemsIDs
+      return items
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('An unexpected error happened while finding shop items')
+      
     }
   }
 

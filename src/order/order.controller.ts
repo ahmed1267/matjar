@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -13,9 +13,16 @@ export class OrderController {
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  findAll(@Query('buyerId') buyerId: string, @Query('sellerId') sellerId: string) {
+    if (buyerId) {
+      return this.orderService.findAllByBuyer(buyerId);
+    } else if (sellerId) {
+      return this.orderService.findAllBySeller(sellerId);
+    } else {
+      return { message: 'Please provide either buyerId or sellerId' };
+    }
   }
+  
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -23,8 +30,8 @@ export class OrderController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  update(@Param('id') id: string,@Param('buyerId') buyerId: string, @Body() updateOrderDto: UpdateOrderDto) {
+    return this.orderService.update(id, buyerId, updateOrderDto);
   }
 
   @Delete(':id')
