@@ -12,7 +12,6 @@ import { Shop } from './schemas/shop_schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateShopDto } from './dto/create-shop.dto';
-import { log } from 'console';
 
 @Injectable()
 export class ShopService {

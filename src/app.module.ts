@@ -37,6 +37,6 @@ import { ReportsModule } from './reports/reports.module';
     ReportsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PassportModule, ReportsService],
+  providers: [AppService, PassportModule],
 })
 export class AppModule { }

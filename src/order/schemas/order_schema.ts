@@ -11,7 +11,7 @@ export enum OrderStatusTypes {
   }
 // Define the shop schema
 @Schema({
-  timestamps: true, // Add timestamps for createdAt and updatedAt
+  timestamps: true// Add timestamps for createdAt and updatedAt
 })
 export class Order {
 
@@ -38,6 +38,14 @@ export class Order {
 
   @Prop()
   comments: string;
+
+  @Prop({required: true, type: Types.ObjectId, ref: 'Shop'})
+  shopID: string;
+
+  createdAt: Date;
+
+  updatedAt: Date;
+
 }
 
 // Create the Mongoose schema for the Movie class

@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './schemas/user_schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
-import { PassportModule } from '@nestjs/passport';
+import { PassportModule} from '@nestjs/passport'
 import { AuthService } from 'src/auth/auth.service';
 // import { EmailVerification } from 'src/auth/schemas/emailverfication_schema';
 import { OtpService } from './otp/otp.service';

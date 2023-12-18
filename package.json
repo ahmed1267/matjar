@@ -37,6 +37,7 @@
     "dotenv": "^16.3.1",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
+    "moment": "^2.29.4",
     "mongoose": "^8.0.0",
     "nest": "^0.1.6",
     "node-mailjet": "^6.0.5",

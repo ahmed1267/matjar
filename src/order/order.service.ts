@@ -57,8 +57,8 @@ export class OrderService {
       const orders= await this.orderModel.find({buyerID: id}).catch(err=> {
         console.log(err)
         throw new InternalServerErrorException('An unexpected error happened while finding the orders')
-        return orders
       }) 
+      return orders
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('An unexpected error happened while finding the orders')
