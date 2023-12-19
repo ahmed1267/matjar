@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,21 +17,28 @@ export class ReportsService {
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
-    
-    create(createReportDto: CreateReportDto) {
-      return 'This action adds a new report';
-    }
-    
-    findAll() {
-      return `This action returns all reports`;
-    }
-    
-    findOne(id: number) {
-      return `This action returns a #${id} report`;
-    }
-    
-    update(id: number, updateReportDto: UpdateReportDto) {
-      return `This action updates a #${id} report`;
+     
+    async findOne(id: string, report: string, year?: string, month?: string) {
+      const user = await this.userModel.findById(id).catch(err=> {
+        console.log(err)
+        throw new InternalServerErrorException('Unexpected error happened while finding the user!')
+      })
+      if(user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
+      const shopId= user.shop
+      switch(report){
+        case "monthlySales":
+          const reportYear= parseInt(year)
+          const reportMonth= parseInt(month)
+          return this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
+        case "itemSales":
+          return this.generateItemSalesReport(shopId)
+        case "itemSales":
+          return this.generateItemSalesReport(shopId)
+        case "itemRatings":
+          return this.getShopItemRatings(shopId)
+        case "orderMetrics":
+          return this.getShopOrdersMetrics(shopId)
+      }
     }
     
     remove(id: number) {
@@ -59,7 +66,10 @@ export class ReportsService {
             totalSales: { $sum: '$items.price' },
           },
         },
-      ]);
+      ]).catch(err=> {
+        console.log(err)
+        throw new InternalServerErrorException('Unexpected error happened when aggregating!')
+      });
   
       const result = new Map<string, number>();
   
@@ -86,7 +96,10 @@ export class ReportsService {
           totalSales: { $sum: '$items.price' },
         },
       },
-    ]);
+    ]).catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while aggregating!')
+    });
 
     const result = new Map<string, number>();
 
@@ -99,14 +112,20 @@ export class ReportsService {
     return result;
   }
 
-  async getShopItemRatings(shopId: { itemsIDs: string[] }): Promise<Map<number, number>> {
-    const shop = await this.shopModel.findById(shopId).exec();
+  async getShopItemRatings(shopId: string): Promise<Map<number, number>> {
+    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
+    });
 
     if (!shop) {
       throw new NotFoundException('Shop not found');
     }
 
-    const items = await this.itemModel.find({ _id: { $in: shop.itemsIDs } }).exec();
+    const items = await this.itemModel.find({ _id: { $in: shop.itemsIDs } }).exec().catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the items!')
+    });
 
     const ratingsMap = new Map<number, number>();
 
@@ -119,20 +138,29 @@ export class ReportsService {
   }
 
   async getShopCustomerCount(shopId: string): Promise<number> {
-    const shop = await this.shopModel.findById(shopId).exec();
+    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
+    });
     return shop.customers.length;
   }
 
   async getShopOrdersMetrics(shopId: string) {
 
-    const shop = await this.shopModel.findById(shopId).exec();
+    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
+    });
 
     if (!shop) {
       throw new NotFoundException('Shop not found');
     }
 
 
-    const orders = await this.orderModel.find({ shopID: shopId }).exec();
+    const orders = await this.orderModel.find({ shopID: shopId }).exec().catch(err=> {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the orders!')
+    });
 
 
     const hoursWithMostOrders = this.calculateMostOrdersByHour(orders);
