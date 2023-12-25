@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 export class ItemService {
   constructor(
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
-  ) {}
+  ) { }
 
   async create(createItemDto: CreateItemDto) {
     try {
@@ -33,7 +33,11 @@ export class ItemService {
           category,
         })
         .limit(10)
-        .skip(page * 10);
+        .skip(page * 10).catch(err => {
+          console.log(err);
+          throw new InternalServerErrorException('An unexpected error happened while finding the items!');
+
+        });
 
       const count = await this.itemModel
         .find({
@@ -51,7 +55,12 @@ export class ItemService {
 
   async findOne(id: string) {
     try {
-      const item = await this.itemModel.findById(id);
+      const item = await this.itemModel.findById(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while finding the item!');
+
+
+      });
       return item;
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -62,6 +71,12 @@ export class ItemService {
     try {
       const item = await this.itemModel.findByIdAndUpdate(id, updateItemDto, {
         new: true,
+      }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while updating the item!');
+
+
+
       });
 
       return item;
@@ -72,7 +87,10 @@ export class ItemService {
 
   async remove(id: string) {
     try {
-      const item = await this.itemModel.findByIdAndRemove(id);
+      const item = await this.itemModel.findByIdAndRemove(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while deleting the item!');
+      });
       return item;
     } catch (error) {
       throw new InternalServerErrorException(error);

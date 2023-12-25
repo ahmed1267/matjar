@@ -12,7 +12,6 @@ import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { CouponModule } from './coupon/coupon.module';
-import { ReportsService } from './reports/reports.service';
 import { ReportsModule } from './reports/reports.module';
 
 @Module({
