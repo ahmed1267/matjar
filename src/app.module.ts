@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { CouponModule } from './coupon/coupon.module';
 import { ReportsModule } from './reports/reports.module';
+import { AdminController } from './admin/admin.controller';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { ReportsModule } from './reports/reports.module';
     CouponModule,
     ReportsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AdminController],
   providers: [AppService, PassportModule],
 })
 export class AppModule { }

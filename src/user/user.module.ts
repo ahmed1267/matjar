@@ -5,9 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './schemas/user_schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
-import { PassportModule} from '@nestjs/passport'
+import { PassportModule } from '@nestjs/passport'
 import { AuthService } from 'src/auth/auth.service';
-// import { EmailVerification } from 'src/auth/schemas/emailverfication_schema';
 import { OtpService } from './otp/otp.service';
 import { OtpController } from './otp/otp.controller';
 import { Otp, OtpSchema } from './schemas/otp-schema';
@@ -36,7 +35,6 @@ import { ConfigModule } from '@nestjs/config';
     AuthService,
     OtpService,
     EmailService,
-    // EmailVerification
   ],
 })
-export class UserModule {}
+export class UserModule { }

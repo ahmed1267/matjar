@@ -20,7 +20,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
   async register(createUserDto: CreateUserDto) {
     try {
       const { email } = createUserDto;
@@ -78,8 +78,9 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      const idValid = mongoose.isValidObjectId(id);
-      if (!idValid) throw new BadRequestException('Please enter correct Id');
+      // const idValid = mongoose.isValidObjectId(id);
+      // if (!idValid) throw new BadRequestException('Please enter correct Id');
+      console.log(id)
       const foundUser = await this.userModel.findById(id).catch((err) => {
         console.log(err);
         throw new NotFoundException('This user doesnt exist');

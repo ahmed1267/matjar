@@ -23,7 +23,7 @@ export class UserController {
     private readonly userService: UserService,
     private authService: AuthService,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -38,7 +38,7 @@ export class UserController {
   @Post('login')
   @UsePipes(ValidationPipe)
   @Redirect('/auth/login')
-  async login() {}
+  async login() { }
 
   @Get()
   findAll(@Param('page') page: number) {

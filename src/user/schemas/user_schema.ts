@@ -65,7 +65,7 @@ export class User {
     enum: UserExperienceType,
     default: UserExperienceType.STORE,
   })
-  experienceType: string;
+  experienceType: UserExperienceType;
 
   @Prop({ type: [{ type: String, enum: ReadyOption }], isArray: true })
   ready: ReadyOption[];
