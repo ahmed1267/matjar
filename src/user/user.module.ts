@@ -36,5 +36,6 @@ import { ConfigModule } from '@nestjs/config';
     OtpService,
     EmailService,
   ],
+  exports: [UserModule, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
 })
 export class UserModule { }

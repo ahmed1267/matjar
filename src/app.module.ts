@@ -14,6 +14,7 @@ import { PassportModule } from '@nestjs/passport';
 import { CouponModule } from './coupon/coupon.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminController } from './admin/admin.controller';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -35,8 +36,9 @@ import { AdminController } from './admin/admin.controller';
     AuthModule,
     CouponModule,
     ReportsModule,
+    AdminModule
   ],
-  controllers: [AppController, AdminController],
-  providers: [AppService, PassportModule],
+  controllers: [AppController],
+  providers: [AppService, PassportModule, UserModule],
 })
 export class AppModule { }

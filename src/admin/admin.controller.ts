@@ -1,31 +1,27 @@
-import { Controller, Delete, Get, Patch, Post, Redirect, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Redirect } from '@nestjs/common';
+import { AdminService } from './admin.service';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Controller('admin')
 export class AdminController {
+  constructor(private readonly adminService: AdminService) { }
 
-    @Post('register')
-    @UsePipes(new ValidationPipe({ transform: true }))
-    @Redirect('/user/register')
-    async register() { };
+  @Get()
+  @Redirect('/user')
+  findAll() { }
 
-    @Post('login')
-    @UsePipes(ValidationPipe)
-    @Redirect('/auth/login')
-    async login() { }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.adminService.findOne(id);
+  }
 
-    @Get()
-    @Redirect('/user')
-    findAll() { }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.adminService.update(updateUserDto);
+  }
 
-    @Get('one/:id')
-    @Redirect('/user/one/:id')
-    findOne() { }
-
-    @Patch()
-    @Redirect('/user')
-    update() { }
-
-    @Delete(':id')
-    @Redirect('/user')
-    remove() { }
+  @Delete(':id')
+  remove(@Param('id') userId: string, @Body('id') deleteId: string) {
+    return this.adminService.remove(userId, deleteId);
+  }
 }

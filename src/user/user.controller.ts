@@ -9,6 +9,8 @@ import {
   ValidationPipe,
   UsePipes,
   Redirect,
+  Request,
+  UseGuards
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -16,6 +18,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { EmailService } from './email/email.service';
+import { User } from './schemas/user_schema';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -35,18 +39,21 @@ export class UserController {
     return this.userService.register(createUserDto);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @UsePipes(ValidationPipe)
-  @Redirect('/auth/login')
-  async login() { }
+  async login(@Request() req) {
+    const user = req.user
+    return await this.authService.login(user)
+  }
 
   @Get()
   findAll(@Param('page') page: number) {
     return this.userService.findAll(page);
   }
 
-  @Get('one/:id')
-  findOne(@Param('id') id: string) {
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<User | null> {
     return this.userService.findOne(id);
   }
 
