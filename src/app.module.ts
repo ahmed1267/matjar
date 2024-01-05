@@ -15,6 +15,10 @@ import { CouponModule } from './coupon/coupon.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminController } from './admin/admin.controller';
 import { AdminModule } from './admin/admin.module';
+import { PhotoSliderModule } from './photo-slider/photo-slider.module';
+import { ProductSliderModule } from './product-slider/product-slider.module';
+import { ReviewModule } from './review/review.module';
+import { CardSliderModule } from './card-slider/card-slider.module';
 
 @Module({
   imports: [
@@ -36,9 +40,13 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     CouponModule,
     ReportsModule,
-    AdminModule
+    AdminModule,
+    CardSliderModule,
+    ReviewModule,
+    ProductSliderModule,
+    PhotoSliderModule
   ],
   controllers: [AppController],
-  providers: [AppService, PassportModule, UserModule],
+  providers: [AppService, PassportModule, UserModule, ShopModule],
 })
 export class AppModule { }

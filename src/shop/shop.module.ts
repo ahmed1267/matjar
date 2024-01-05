@@ -10,5 +10,6 @@ import { Shop, ShopSchema } from './schemas/shop_schema';
   }]), ShopModule],
   controllers: [ShopController],
   providers: [ShopService],
+  exports: [ShopModule, MongooseModule.forFeature([{ name: Shop.name, schema: ShopSchema }]),]
 })
 export class ShopModule { }

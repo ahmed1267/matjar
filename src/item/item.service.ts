@@ -74,9 +74,6 @@ export class ItemService {
       }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while updating the item!');
-
-
-
       });
 
       return item;

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes } from 'mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 
 import validator from 'validator';
 
@@ -72,6 +72,9 @@ export class User {
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Shop' })
   shop: string;
+
+  @Prop({ type: [Types.ObjectId], ref: 'User' })
+  reviews: string[];
 }
 
 // Create the Mongoose schema for the user class

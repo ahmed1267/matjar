@@ -21,8 +21,10 @@ export class Shop {
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   itemsIDs: string[];
 
-  @Prop({type: [Types.ObjectId], ref: 'User'})
+  @Prop({ type: [Types.ObjectId], ref: 'User' })
   customers: string[];
+
+  containers: string[]
 }
 
 // Create the Mongoose schema for the Movie class
