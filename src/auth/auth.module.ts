@@ -8,7 +8,6 @@ import { User, UserSchema } from 'src/user/schemas/user_schema';
 
 import { PassportModule } from '@nestjs/passport';
 import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
-// import { EmailVerification, EmailVerificationSchema } from './schemas/emailverfication_schema';
 
 @Module({
   providers: [
@@ -16,7 +15,6 @@ import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
     UserService,
     LocalStrategy,
     RefreshJwtStrategy,
-    // EmailVerification
   ],
   controllers: [AuthController],
   imports: [

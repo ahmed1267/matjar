@@ -7,13 +7,11 @@ import { ShopModule } from './shop/shop.module';
 import { UserModule } from './user/user.module';
 import { ItemModule } from './item/item.module';
 import { OrderModule } from './order/order.module';
-import { CustomerModule } from './customer/customer.module';
 import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { CouponModule } from './coupon/coupon.module';
 import { ReportsModule } from './reports/reports.module';
-import { AdminController } from './admin/admin.controller';
 import { AdminModule } from './admin/admin.module';
 import { PhotoSliderModule } from './photo-slider/photo-slider.module';
 import { ProductSliderModule } from './product-slider/product-slider.module';
@@ -36,7 +34,6 @@ import { CardSliderModule } from './card-slider/card-slider.module';
     UserModule,
     ItemModule,
     OrderModule,
-    CustomerModule,
     AuthModule,
     CouponModule,
     ReportsModule,
