@@ -16,7 +16,8 @@ import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('shop')
 export class ShopController {
-  constructor(private readonly shopService: ShopService
+  constructor(
+private readonly shopService: ShopService,
 private authService: AuthService,
 ) { }
 
