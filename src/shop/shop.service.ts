@@ -18,7 +18,7 @@ export class ShopService {
   constructor(
     @InjectModel(Shop.name)
     private shopModel: mongoose.Model<Shop>,
-  ) {}
+  ) { }
 
   async create(createShopDto: CreateShopDto) {
     try {
@@ -52,7 +52,7 @@ export class ShopService {
 
       const foundShop = await (
         await this.shopModel.findById(id)
-      ).populate('items', 'name');
+      ).populate('itemsIDs', 'name');
 
       if (!foundShop)
         throw new NotFoundException('There is no shop with this id');
@@ -98,9 +98,9 @@ export class ShopService {
     }
   }
 
-  async findShopItems(id: string){
+  async findShopItems(id: string) {
     try {
-      const shop = await this.shopModel.findById(id).populate('itemsIDs').exec().catch(err=> {
+      const shop = await this.shopModel.findById(id).populate('itemsIDs').exec().catch(err => {
         console.log(err)
         throw new InternalServerErrorException('An expected error happened while finding shop items')
       })
@@ -109,13 +109,16 @@ export class ShopService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('An unexpected error happened while finding shop items')
-      
+
     }
   }
 
   async remove(id: string) {
     try {
-      const shop = await this.shopModel.findByIdAndRemove(id);
+      const shop = await this.shopModel.findByIdAndRemove(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException('An expected error happened while removing shop')
+      });
 
       return shop;
     } catch (error) {

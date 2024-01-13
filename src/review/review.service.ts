@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
 import { User, UserDocument } from 'src/user/schemas/user_schema';
 import { Review, ReviewDocument } from './schemas/review_schema';
-import e from 'express';
+
 
 @Injectable()
 export class ReviewService {
@@ -17,11 +17,17 @@ export class ReviewService {
   ) { }
   async create(createReviewDto: CreateReviewDto) {
     try {
-      const user = await this.userModel.findById(createReviewDto.user);
-      if (user.id == createReviewDto.user) throw new UnauthorizedException('You cant review your own shop')
+      const user = await this.userModel.findById(createReviewDto.user).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while finding the user!');
+
+      })
+      if (user.id == createReviewDto.shop) throw new UnauthorizedException('You cant review your own shop')
       const review = await new this.reviewModel(createReviewDto).save();
       const shop = await this.shopModel.findById(createReviewDto.shop);
+      console.log(shop)
       shop.containers.push(review.id);
+
       await shop.save();
       user.reviews.push(review.id);
       return review;
