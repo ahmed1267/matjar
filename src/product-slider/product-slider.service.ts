@@ -17,7 +17,7 @@ export class ProductSliderService {
     try {
       const productSlider = await new this.productSliderModel(createProductSliderDto).save();
       const shop = await this.shopModel.findById(createProductSliderDto.shop);
-      shop.containers.push(productSlider.id);
+      shop.containers.push({ containerID: productSlider.id, containerType: 'product slider' });
       await shop.save();
       return productSlider;
     } catch (err) {
@@ -82,7 +82,7 @@ export class ProductSliderService {
 
       })
       for (let i = 0; i < shop.containers.length; i++) {
-        if (shop.containers[i] === id) {
+        if (shop.containers[i].containerID === id) {
           shop.containers.splice(i, 1);
           break;
         }

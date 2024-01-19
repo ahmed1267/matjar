@@ -12,12 +12,20 @@ import { Shop } from './schemas/shop_schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateShopDto } from './dto/create-shop.dto';
+import { Review, ReviewDocument } from 'src/review/schemas/review_schema';
+import { ProductSlider, ProductSliderDocument } from 'src/product-slider/schemas/productSlider_schema';
+import { PhotoSlider, PhotoSliderDocument } from 'src/photo-slider/schemas/photoSlider_schema';
+import { CardSlider, CardSliderDocument } from 'src/card-slider/schemas/cardSlider_schema';
 
 @Injectable()
 export class ShopService {
   constructor(
     @InjectModel(Shop.name)
     private shopModel: mongoose.Model<Shop>,
+    @InjectModel(Review.name) private reviewModel: mongoose.Model<ReviewDocument>,
+    @InjectModel(ProductSlider.name) private productSliderModel: mongoose.Model<ProductSliderDocument>,
+    @InjectModel(PhotoSlider.name) private photoSliderModel: mongoose.Model<PhotoSliderDocument>,
+    @InjectModel(CardSlider.name) private cardSliderModel: mongoose.Model<CardSliderDocument>,
   ) { }
 
   async create(createShopDto: CreateShopDto) {
@@ -124,5 +132,51 @@ export class ShopService {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+  }
+
+  async findShopContainers(id: string): Promise<Object> {
+
+    try {
+      const shop = await this.shopModel.findById(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException('An expected error happened while finding shop containers')
+      })
+      let containers = []
+      shop.containers.forEach(async container => {
+        switch (container.containerType) {
+          case 'review':
+            const review = await this.reviewModel.findById(container.containerID).catch(err => {
+              console.log(err)
+              throw new InternalServerErrorException('An expected error happened while finding shop containers')
+            })
+            containers.push(review)
+          case 'product slider':
+            const productSlider = await this.productSliderModel.findById(container.containerID).catch(err => {
+              console.log(err)
+              throw new InternalServerErrorException('An expected error happened while finding shop containers')
+            })
+            containers.push(productSlider)
+
+          case 'photo slider':
+            const photoSlider = await this.photoSliderModel.findById(container.containerID).catch(err => {
+              console.log(err)
+              throw new InternalServerErrorException('An expected error happened while finding shop containers')
+            })
+            containers.push(photoSlider)
+          case 'card slider':
+            const cardSlider = await this.cardSliderModel.findById(container.containerID).catch(err => {
+              console.log(err)
+              throw new InternalServerErrorException('An expected error happened while finding shop containers')
+            })
+            containers.push(cardSlider)
+
+        }
+      })
+      return containers;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('An unexpected error happened while finding shop containers')
+    }
+
   }
 }

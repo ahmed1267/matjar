@@ -9,7 +9,7 @@ import { Coupon } from './schemas/coupon.schema';
 export class CouponService {
   constructor(
     @InjectModel(Coupon.name) private readonly couponModel: Model<Coupon>,
-  ) {}
+  ) { }
 
   async create(createCouponDto: CreateCouponDto) {
     try {
@@ -28,7 +28,10 @@ export class CouponService {
           user,
         })
         .limit(10)
-        .skip(10 * page);
+        .skip(10 * page).catch(err => {
+          console.log(err);
+          throw new InternalServerErrorException('An unexpected error happened while getting the coupons!');
+        });
 
       return coupons;
     } catch (error) {

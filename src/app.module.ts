@@ -12,7 +12,6 @@ import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { CouponModule } from './coupon/coupon.module';
 import { ReportsModule } from './reports/reports.module';
-import { AdminController } from './admin/admin.controller';
 import { AdminModule } from './admin/admin.module';
 import { PhotoSliderModule } from './photo-slider/photo-slider.module';
 import { ProductSliderModule } from './product-slider/product-slider.module';
@@ -45,6 +44,9 @@ import { CardSliderModule } from './card-slider/card-slider.module';
     PhotoSliderModule
   ],
   controllers: [AppController],
-  providers: [AppService, PassportModule, UserModule, ShopModule],
+  providers: [AppService, PassportModule, UserModule, ShopModule, CardSliderModule,
+    ReviewModule,
+    ProductSliderModule,
+    PhotoSliderModule],
 })
 export class AppModule { }

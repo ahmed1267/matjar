@@ -25,8 +25,7 @@ export class ReviewService {
       if (user.id == createReviewDto.shop) throw new UnauthorizedException('You cant review your own shop')
       const review = await new this.reviewModel(createReviewDto).save();
       const shop = await this.shopModel.findById(createReviewDto.shop);
-      console.log(shop)
-      shop.containers.push(review.id);
+      shop.containers.push({ containerID: review.id, containerType: 'review' });
 
       await shop.save();
       user.reviews.push(review.id);
@@ -94,7 +93,7 @@ export class ReviewService {
 
       })
       for (let i = 0; i < shop.containers.length; i++) {
-        if (shop.containers[i] === id) {
+        if (shop.containers[i].containerID === id) {
           shop.containers.splice(i, 1);
           break;
         }

@@ -16,20 +16,20 @@ import { Category } from './schemas/item-schema';
 
 @Controller('item')
 export class ItemController {
-  constructor(private readonly itemService: ItemService) {}
+  constructor(private readonly itemService: ItemService) { }
 
   @Post()
   create(@Body() createItemDto: CreateItemDto) {
     return this.itemService.create(createItemDto);
   }
 
-  @Get(':page/:user')
+  @Get(':page/:shop')
   findAll(
     @Param('page') page: number,
-    @Param('user') userId: string,
+    @Param('shop') shopId: string,
     @Query('category') category: Category,
   ) {
-    return this.itemService.findAll(page, userId, category);
+    return this.itemService.findAll(page, shopId, category);
   }
 
   @Get('one/:id')
@@ -46,4 +46,5 @@ export class ItemController {
   remove(@Param('id') id: string) {
     return this.itemService.remove(id);
   }
+
 }

@@ -24,7 +24,7 @@ export class UpdateShopDto extends PartialType(CreateShopDto) {
   category: string[];
 
   @IsArray({ message: 'A shop must have a string array containers' })
-  containers: string[];
+  containers: Object[];
 
   @IsArray({ message: 'A shop must have a string array custommers' })
   customers: string[];

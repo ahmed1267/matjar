@@ -17,7 +17,7 @@ export class PhotoSliderService {
     try {
       const photoSlider = await new this.photoSliderModel(CreatePhotoSliderDto).save();
       const shop = await this.shopModel.findById(createPhotoSliderDto.shop);
-      shop.containers.push(photoSlider._id);
+      shop.containers.push({ containerID: photoSlider.id, containerType: 'photo slider' });
       await shop.save();
       return photoSlider;
     } catch (err) {
@@ -82,7 +82,7 @@ export class PhotoSliderService {
 
     })
     for (let i = 0; i < shop.containers.length; i++) {
-      if (shop.containers[i] === id) {
+      if (shop.containers[i].containerID === id) {
         shop.containers.splice(i, 1);
         break;
       }

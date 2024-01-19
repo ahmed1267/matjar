@@ -37,5 +37,5 @@ export class CreateShopDto {
 
   @IsNotEmpty({ message: 'A shop must have at least one container' })
   @IsArray({ message: 'A shop must have a string array containers' })
-  containers: string[];
+  containers: Object[];
 }

@@ -17,7 +17,7 @@ export class CardSliderService {
     try {
       const cardSlider = await new this.cardSliderModel(createCardSliderDto).save();
       const shop = await this.shopModel.findById(createCardSliderDto.shop);
-      shop.containers.push(cardSlider._id);
+      shop.containers.push({ containerID: cardSlider.id, containerType: 'card slider' });
       await shop.save();
       return cardSlider;
     } catch (err) {
@@ -82,7 +82,7 @@ export class CardSliderService {
 
     })
     for (let i = 0; i < shop.containers.length; i++) {
-      if (shop.containers[i] === id) {
+      if (shop.containers[i].containerID === id) {
         shop.containers.splice(i, 1);
         break;
       }

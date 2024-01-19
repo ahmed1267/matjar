@@ -5,17 +5,31 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { Category, Item, ItemDocument } from './schemas/item-schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
 
 @Injectable()
 export class ItemService {
   constructor(
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
+    @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
   ) { }
 
   async create(createItemDto: CreateItemDto) {
     try {
-      const item = await new this.itemModel(createItemDto).save();
+      const item = await new this.itemModel(createItemDto).save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+      });
+      const shop = await this.shopModel.findById(item.shopID).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+      })
 
+      shop.itemsIDs.push(item.id);
+      await shop.save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+      })
       return item;
     } catch (err) {
       console.log(err);
@@ -25,11 +39,11 @@ export class ItemService {
     }
   }
 
-  async findAll(page: number = 0, userId?: string, category?: Category) {
+  async findAll(page: number = 0, shopId?: string, category?: Category) {
     try {
       const items = await this.itemModel
         .find({
-          userID: userId,
+          shopID: shopId,
           category,
         })
         .limit(10)
@@ -39,9 +53,11 @@ export class ItemService {
 
         });
 
+
+
       const count = await this.itemModel
         .find({
-          userID: userId,
+          shopID: shopId,
           category,
         })
         .countDocuments();
