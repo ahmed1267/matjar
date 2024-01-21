@@ -13,8 +13,8 @@ export class ReviewController {
   }
 
   @Get()
-  findAll() {
-    return this.reviewService.findAll();
+  findAll(@Body('shop') shop?: string, @Body('user') user?: string, @Body('item') item?: string) {
+    return this.reviewService.findAll(shop, user, item);
   }
 
   @Get(':id')

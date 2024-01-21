@@ -12,9 +12,9 @@ export class ProductSliderController {
     return this.productSliderService.create(createProductSliderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.productSliderService.findAll();
+  @Get(':id')
+  findAll(@Param('id') id: string) {
+    return this.productSliderService.findAll(id);
   }
 
   @Get(':id')

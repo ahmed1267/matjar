@@ -27,12 +27,13 @@ export class ReviewService {
     try {
       const reviews = await this.reviewModel.find({
         shop,
-        user,
+        user: user,
         item
       }).catch(err => {
         console.log(err)
         throw new InternalServerErrorException('An unexpected error happened while getting the reviews!')
       })
+      return reviews
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException('An unexpected error happened while getting the reviews!')
@@ -54,7 +55,7 @@ export class ReviewService {
 
   async update(id: string, updateReviewDto: UpdateReviewDto) {
     try {
-      const review = await this.reviewModel.findByIdAndUpdate(updateReviewDto).catch(err => {
+      const review = await this.reviewModel.findByIdAndUpdate(id, updateReviewDto).catch(err => {
         console.log(err)
         throw new InternalServerErrorException('An unexpected error happened while updating the review!')
       })
@@ -74,10 +75,14 @@ export class ReviewService {
 
       if (review.shop == userId) throw new BadRequestException('You cant delete reviews from your own shop!')
 
+      if (review.user != userId) throw new BadRequestException('You cant delete this review!')
+
       await this.reviewModel.deleteOne({ id }).catch(err => {
         console.log(err)
         throw new InternalServerErrorException('An unexpected error happened while removing the review!')
       })
+
+      return "review has been deleted successfully!"
 
     } catch (error) {
       console.log(error)

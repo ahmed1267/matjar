@@ -45,7 +45,6 @@ export class ItemService {
         .find({
           shopID: shopId,
           category,
-          subCategory: { $in: subCategory }
         })
         .limit(10)
         .skip(page * 10).catch(err => {

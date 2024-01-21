@@ -57,6 +57,7 @@ export class CategoryService {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while updating the category!')
       })
+      return category
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('An unexpected error happened while updating the category!');
@@ -69,6 +70,7 @@ export class CategoryService {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while deleting the category!')
       })
+      return "Category has been deleted successfully"
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('An unexpected error happened while deleting the category!');

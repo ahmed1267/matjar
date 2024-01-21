@@ -4,7 +4,6 @@ import { IsArray, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-valid
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
 
-    @IsNotEmpty({ message: 'A Category must have a title' })
     @IsString({ message: 'A Category must have a string title' })
     @MinLength(3, { message: 'A Category title must be at least 3 characters long' })
     @MaxLength(20, { message: 'A Category title must be at most 20 characters long' })

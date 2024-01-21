@@ -28,9 +28,9 @@ export class ProductSliderService {
     }
   }
 
-  async findAll() {
+  async findAll(id) {
     try {
-      const productSlider = await this.productSliderModel.find().catch(err => {
+      const productSlider = await this.productSliderModel.find({ shop: id }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened!');
       })
@@ -92,7 +92,7 @@ export class ProductSliderService {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while deleting the productSlider!');
       })
-      return productSlider;
+      return 'Prouct Slider has been deleted successfully!';
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
