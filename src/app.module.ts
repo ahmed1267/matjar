@@ -15,8 +15,11 @@ import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { PhotoSliderModule } from './photo-slider/photo-slider.module';
 import { ProductSliderModule } from './product-slider/product-slider.module';
-import { ReviewModule } from './review/review.module';
+import { ReviewContainerModule } from './review-container/review-container.module';
 import { CardSliderModule } from './card-slider/card-slider.module';
+import { CategoryModule } from './category/category.module';
+import { ReviewModule } from './review/review.module';
+
 
 @Module({
   imports: [
@@ -39,9 +42,11 @@ import { CardSliderModule } from './card-slider/card-slider.module';
     ReportsModule,
     AdminModule,
     CardSliderModule,
-    ReviewModule,
+    ReviewContainerModule,
     ProductSliderModule,
-    PhotoSliderModule
+    PhotoSliderModule,
+    CategoryModule,
+    ReviewModule
   ],
   controllers: [AppController],
   providers: [AppService, PassportModule, UserModule, ShopModule, CardSliderModule,

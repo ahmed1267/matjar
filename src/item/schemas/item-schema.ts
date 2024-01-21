@@ -1,14 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-// Enum for user roles
-export enum Category {
-  GYM = 'gym',
-  HOME = 'home',
-  OTHERS = 'others',
-  ACCESSORIES = 'accessories',
-}
-
 // Define the document type for the user schema
 export type ItemDocument = Item & Document;
 
@@ -34,10 +26,9 @@ export class Item {
 
   @Prop({
     required: true,
-    type: [String],
-    enum: [Category.ACCESSORIES, Category.GYM, Category.HOME, Category.OTHERS],
+    type: [{ type: Types.ObjectId, ref: 'Category' }]
   })
-  category: Category[];
+  category: string;
 
   @Prop()
   brand: string;
@@ -53,6 +44,9 @@ export class Item {
 
   @Prop()
   colors: string[];
+
+  @Prop()
+  subCategories: string[]
 }
 
 // Create the Mongoose schema for the user class

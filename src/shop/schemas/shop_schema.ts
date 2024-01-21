@@ -24,6 +24,9 @@ export class Shop {
   @Prop({ type: [Types.ObjectId], ref: 'User' })
   customers: string[];
 
+  @Prop({ type: [Types.ObjectId], ref: 'Category' })
+  categories: string[];
+
   @Prop({ max: 15 })
   containers: [{
     containerID: string,

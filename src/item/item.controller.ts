@@ -12,7 +12,6 @@ import {
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { Category } from './schemas/item-schema';
 
 @Controller('item')
 export class ItemController {
@@ -23,13 +22,14 @@ export class ItemController {
     return this.itemService.create(createItemDto);
   }
 
-  @Get(':page/:shop')
+  @Get(':shop/:page')
   findAll(
     @Param('page') page: number,
     @Param('shop') shopId: string,
-    @Query('category') category: Category,
+    @Query('category') category: string,
+    @Query('subCategorey') subCategorey: string
   ) {
-    return this.itemService.findAll(page, shopId, category);
+    return this.itemService.findAll(page, shopId, category, subCategorey);
   }
 
   @Get('one/:id')

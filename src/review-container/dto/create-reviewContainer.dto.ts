@@ -1,13 +1,15 @@
 import { IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
 
-export class CreateReviewDto {
+export class CreateReviewContainerDto {
     rating: number;
     description: string;
-    @IsNotEmpty({ message: 'A review must belong to a shop!' })
     shop: Types.ObjectId;
-    @IsNotEmpty({ message: 'A review must belong to a shop!' })
+
     user: Types.ObjectId;
-    product: string;
+    item: string;
     title: string;
+
+    @IsNotEmpty({ message: 'review container must have a refrence review' })
+    review: string
 }

@@ -30,7 +30,7 @@ export class CreateShopDto {
   // Shop category, must not be empty and should be an array of strings
   @IsNotEmpty({ message: 'A shop must have at least one category' })
   @IsArray({ message: 'A shop must have a string array category' })
-  category: string[];
+  categories: string[];
 
   @IsArray({ message: 'A shop must have a string array custommers' })
   customers: string[];

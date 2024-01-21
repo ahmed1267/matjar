@@ -16,71 +16,69 @@ export class ReportsService {
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-  ) {}
-     
-    async findOne(id: string, report: string, year?: string, month?: string) {
-      const user = await this.userModel.findById(id).catch(err=> {
-        console.log(err)
-        throw new InternalServerErrorException('Unexpected error happened while finding the user!')
-      })
-      if(user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
-      const shopId= user.shop
-      switch(report){
-        case "monthlySales":
-          const reportYear= parseInt(year)
-          const reportMonth= parseInt(month)
-          return this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
-        case "itemSales":
-          return this.generateItemSalesReport(shopId)
-        case "itemSales":
-          return this.generateItemSalesReport(shopId)
-        case "itemRatings":
-          return this.getShopItemRatings(shopId)
-        case "orderMetrics":
-          return this.getShopOrdersMetrics(shopId)
-      }
-    }
-    
-    remove(id: number) {
-      return `This action removes a #${id} report`;
-    }
+  ) { }
 
-    async generateMonthlySalesReport(
-      shopId: string,
-      year: number,
-      month: number,
-    ): Promise<Map<string, number>> {
-      const monthlySales = await this.orderModel.aggregate([
-        {
-          $match: {
-            shopID: shopId,
-            createdAt: {
-              $gte: new Date(year, month - 1, 1),
-              $lt: new Date(year, month, 1),
-            },
-          },
-        },
-        {
-          $group: {
-            _id: '$items.itemID',
-            totalSales: { $sum: '$items.price' },
-          },
-        },
-      ]).catch(err=> {
-        console.log(err)
-        throw new InternalServerErrorException('Unexpected error happened when aggregating!')
-      });
-  
-      const result = new Map<string, number>();
-  
-      monthlySales.forEach(
-        (entry: { _id: string; totalSales: number }) => {
-          result.set(entry._id, entry.totalSales);
-        },
-      );
-  
-      return result;
+  async findOne(id: string, report: string, year?: string, month?: string) {
+    const user = await this.userModel.findById(id).catch(err => {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened while finding the user!')
+    })
+    if (user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
+    const shopId = user.shop
+    switch (report) {
+      case "monthlySales":
+        const reportYear = parseInt(year)
+        const reportMonth = parseInt(month)
+        return this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
+      case "itemSales":
+        return this.generateItemSalesReport(shopId)
+      case "itemRatings":
+        return this.getShopItemRatings(shopId)
+      case "orderMetrics":
+        return this.getShopOrdersMetrics(shopId)
     }
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} report`;
+  }
+
+  async generateMonthlySalesReport(
+    shopId: string,
+    year: number,
+    month: number,
+  ): Promise<Map<string, number>> {
+    const monthlySales = await this.orderModel.aggregate([
+      {
+        $match: {
+          shopID: shopId,
+          createdAt: {
+            $gte: new Date(year, month - 1, 1),
+            $lt: new Date(year, month, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$items.itemID',
+          totalSales: { $sum: '$items.price' },
+        },
+      },
+    ]).catch(err => {
+      console.log(err)
+      throw new InternalServerErrorException('Unexpected error happened when aggregating!')
+    });
+
+    const result = new Map<string, number>();
+
+    monthlySales.forEach(
+      (entry: { _id: string; totalSales: number }) => {
+        result.set(entry._id, entry.totalSales);
+      },
+    );
+
+    return result;
+  }
 
   async generateItemSalesReport(shopId: string): Promise<Map<string, number>> {
     const itemSales = await this.orderModel.aggregate([
@@ -96,7 +94,7 @@ export class ReportsService {
           totalSales: { $sum: '$items.price' },
         },
       },
-    ]).catch(err=> {
+    ]).catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while aggregating!')
     });
@@ -113,7 +111,7 @@ export class ReportsService {
   }
 
   async getShopItemRatings(shopId: string): Promise<Map<number, number>> {
-    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+    const shop = await this.shopModel.findById(shopId).exec().catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
     });
@@ -122,7 +120,7 @@ export class ReportsService {
       throw new NotFoundException('Shop not found');
     }
 
-    const items = await this.itemModel.find({ _id: { $in: shop.itemsIDs } }).exec().catch(err=> {
+    const items = await this.itemModel.find({ _id: { $in: shop.itemsIDs } }).exec().catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while finding the items!')
     });
@@ -130,7 +128,7 @@ export class ReportsService {
     const ratingsMap = new Map<number, number>();
 
     items.forEach((item) => {
-      const rating = item.rating || 0; 
+      const rating = item.rating || 0;
       ratingsMap.set(rating, (ratingsMap.get(rating) || 0) + 1);
     });
 
@@ -138,7 +136,7 @@ export class ReportsService {
   }
 
   async getShopCustomerCount(shopId: string): Promise<number> {
-    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+    const shop = await this.shopModel.findById(shopId).exec().catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
     });
@@ -147,7 +145,7 @@ export class ReportsService {
 
   async getShopOrdersMetrics(shopId: string) {
 
-    const shop = await this.shopModel.findById(shopId).exec().catch(err=> {
+    const shop = await this.shopModel.findById(shopId).exec().catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while finding the shop!')
     });
@@ -157,7 +155,7 @@ export class ReportsService {
     }
 
 
-    const orders = await this.orderModel.find({ shopID: shopId }).exec().catch(err=> {
+    const orders = await this.orderModel.find({ shopID: shopId }).exec().catch(err => {
       console.log(err)
       throw new InternalServerErrorException('Unexpected error happened while finding the orders!')
     });
@@ -175,23 +173,23 @@ export class ReportsService {
   }
   private calculateMostOrdersByHour(orders: OrderDocument[]) {
     const orderCountsByHour = new Map<number, number>();
-  
+
     orders.forEach((order) => {
       const orderHour = moment(order.createdAt).hour();
       orderCountsByHour.set(orderHour, (orderCountsByHour.get(orderHour) || 0) + 1);
     });
-  
+
 
     let mostOrdersHour: number;
     let mostOrdersCount = 0;
-  
+
     orderCountsByHour.forEach((count, hour) => {
       if (count > mostOrdersCount) {
         mostOrdersCount = count;
         mostOrdersHour = hour;
       }
     });
-  
+
     return {
       mostOrdersHour,
       mostOrdersCount,
@@ -200,22 +198,22 @@ export class ReportsService {
 
   private calculateMostOrdersByDay(orders: OrderDocument[]) {
     const orderCountsByDay = new Map<string, number>();
-  
+
     orders.forEach((order) => {
       const orderDay = moment(order.createdAt).format('dddd');
       orderCountsByDay.set(orderDay, (orderCountsByDay.get(orderDay) || 0) + 1);
     });
-  
+
     let mostOrdersDay: string;
     let mostOrdersCount = 0;
-  
+
     orderCountsByDay.forEach((count, day) => {
       if (count > mostOrdersCount) {
         mostOrdersCount = count;
         mostOrdersDay = day;
       }
     });
-  
+
     return {
       mostOrdersDay,
       mostOrdersCount,
@@ -224,22 +222,22 @@ export class ReportsService {
 
   private calculateMostOrdersByBuyer(orders: OrderDocument[]) {
     const orderCountsByBuyer = new Map<string, number>();
-  
+
     orders.forEach((order) => {
       const buyerId = order.buyerID;
       orderCountsByBuyer.set(buyerId, (orderCountsByBuyer.get(buyerId) || 0) + 1);
     });
-  
+
     let mostOrdersBuyerId: string;
     let mostOrdersCount = 0;
-  
+
     orderCountsByBuyer.forEach((count, buyerId) => {
       if (count > mostOrdersCount) {
         mostOrdersCount = count;
         mostOrdersBuyerId = buyerId;
       }
     });
-  
+
     return {
       mostOrdersBuyerId,
       mostOrdersCount,

@@ -3,13 +3,13 @@ import { Types } from "mongoose";
 
 
 
-export type ReviewDocument = Review & Document;
+export type ReviewContainerDocument = ReviewContainer & Document;
 
 // Define the shop schema
 @Schema({
     timestamps: true, // Add timestamps for createdAt and updatedAt
 })
-export class Review {
+export class ReviewContainer {
     @Prop()
     rating: number;
     @Prop()
@@ -22,6 +22,9 @@ export class Review {
     shop: string;
     @Prop({ type: Types.ObjectId, ref: 'User' })
     user: string;
+
+    @Prop({ required: true, type: Types.ObjectId, ref: 'Review' })
+    review: string
 }
 
-export const ReviewSchema = SchemaFactory.createForClass(Review);
+export const ReviewContainerSchema = SchemaFactory.createForClass(ReviewContainer);

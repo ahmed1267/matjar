@@ -61,7 +61,7 @@ export class UserService {
     }
   }
 
-  async findAll(page: number = 0) {
+  async findAll(page?: number) {
     try {
       const foundUsers = await this.userModel
         .find()

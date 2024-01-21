@@ -27,8 +27,8 @@ export class ReviewController {
     return this.reviewService.update(id, updateReviewDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewService.remove(id);
+  @Delete(':id/:user')
+  remove(@Param('id') id: string, @Param('user') user: string) {
+    return this.reviewService.remove(id, user);
   }
 }
