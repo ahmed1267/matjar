@@ -12,7 +12,7 @@ export class ReviewService {
   ) { }
   async create(createReviewDto: CreateReviewDto) {
     try {
-      const review = await this.reviewModel.create(createReviewDto).catch(err => {
+      const review = new this.reviewModel(createReviewDto).save().catch(err => {
         console.log(err)
         throw new InternalServerErrorException('An unexpected error happened while creating the review!')
       })
@@ -25,19 +25,20 @@ export class ReviewService {
 
   async findAll(user?: string, shop?: string, item?: string) {
     try {
-      const reviews = await this.reviewModel.find({
-        shop,
-        user: user,
-        item
-      }).catch(err => {
+      const query = { user, shop, item }
+      for (let key in query) {
+        if (!query[key]) delete query[key]
+      }
+      const reviews = await this.reviewModel.find({ ...query }).exec().catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while getting the reviews!')
-      })
-      return reviews
+        throw new InternalServerErrorException('An unexpected error happened while retrieving reviews!')
+      });
+      return reviews;
     } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while getting the reviews!')
+      console.error(error.message); // Log the detailed error message for debugging
+      throw new InternalServerErrorException('Failed to retrieve reviews');
     }
+
   }
 
   async findOne(id: string) {

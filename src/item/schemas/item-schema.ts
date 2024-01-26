@@ -28,7 +28,7 @@ export class Item {
     required: true,
     type: [{ type: Types.ObjectId, ref: 'Category' }]
   })
-  category: string;
+  category: string[];
 
   @Prop()
   brand: string;

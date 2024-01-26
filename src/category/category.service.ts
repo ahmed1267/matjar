@@ -45,6 +45,7 @@ export class CategoryService {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while finding the category!')
       })
+      return category
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('An unexpected error happened while finding the category!');

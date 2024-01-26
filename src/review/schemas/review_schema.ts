@@ -5,18 +5,18 @@ import { Types } from "mongoose";
 
 export type ReviewDocument = Review & Document;
 
-// Define the shop schema
+
 @Schema({
     timestamps: true, // Add timestamps for createdAt and updatedAt
 })
 export class Review {
-    @Prop()
+    @Prop({ required: true })
     rating: number;
-    @Prop()
+    @Prop({ required: true })
     description: string;
     @Prop({ type: Types.ObjectId, ref: 'Item' })
     item: string;
-    @Prop()
+    @Prop({ required: true })
     title: string;
     @Prop({ type: Types.ObjectId, ref: 'Shop' })
     shop: string;

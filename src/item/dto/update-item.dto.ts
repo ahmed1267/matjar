@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { Category, CreateItemDto } from './create-item.dto';
+import { CreateItemDto } from './create-item.dto';
 
 export class UpdateItemDto extends PartialType(CreateItemDto) {
 
@@ -8,7 +8,7 @@ export class UpdateItemDto extends PartialType(CreateItemDto) {
     amount: number;
     userID: string;
     description: string;
-    category: Category[];
+    category: string[];
 
     brand?: string;
     rating?: number;

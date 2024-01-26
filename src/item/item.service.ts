@@ -39,28 +39,23 @@ export class ItemService {
     }
   }
 
-  async findAll(page: number = 0, shopId?: string, category?: string, subCategory?: string) {
+  async findAll(page: number, shopID?: string, category?: string, subCategorey?: string) {
     try {
-      const items = await this.itemModel
-        .find({
-          shopID: shopId,
-          category,
-        })
-        .limit(10)
-        .skip(page * 10).catch(err => {
-          console.log(err);
-          throw new InternalServerErrorException('An unexpected error happened while finding the items!');
+      const query = { shopID, category, subCategorey }
+      for (let key in query) {
+        if (!query[key]) delete query[key]
+      }
 
-        });
+      const items = await this.itemModel.find({ ...query }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('An unexpected error happened while finding the items!');
+
+      });
 
 
 
       const count = await this.itemModel
-        .find({
-          shopID: shopId,
-          category,
-        })
-        .countDocuments();
+        .find({ ...query }).countDocuments();
 
       return { count, items };
     } catch (error) {

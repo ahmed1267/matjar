@@ -17,7 +17,7 @@ export class UpdateShopDto extends PartialType(CreateShopDto) {
     message: 'A shop description must be 150 chracters maximum',
   })
   description: string;
-
+  itemsIDs: string[];
   // Shop category, must not be empty and should be an array of strings
   @IsNotEmpty({ message: 'A shop must have at least one category' })
   @IsArray({ message: 'A shop must have a string array category' })

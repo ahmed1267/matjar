@@ -1,16 +1,14 @@
-export enum Category {
-  ACCESSORIES = 'accessories',
-  HOME = 'home',
-  GYM = 'gym',
-  OTHERS = 'others',
-}
+import { IsArray } from "class-validator";
+
+
 export class CreateItemDto {
   name: string;
   price: number;
   amount: number;
   userID: string;
   description: string;
-  category: Category[];
+  @IsArray({ message: "Item categories must be an array" })
+  category: string[];
 
   brand?: string;
   rating?: number;

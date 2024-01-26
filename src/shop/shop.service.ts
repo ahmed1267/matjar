@@ -20,8 +20,7 @@ import { CardSlider, CardSliderDocument } from 'src/card-slider/schemas/cardSlid
 @Injectable()
 export class ShopService {
   constructor(
-    @InjectModel(Shop.name)
-    private shopModel: mongoose.Model<Shop>,
+    @InjectModel(Shop.name) private shopModel: mongoose.Model<Shop>,
     @InjectModel(Review.name) private reviewModel: mongoose.Model<ReviewDocument>,
     @InjectModel(ProductSlider.name) private productSliderModel: mongoose.Model<ProductSliderDocument>,
     @InjectModel(PhotoSlider.name) private photoSliderModel: mongoose.Model<PhotoSliderDocument>,
@@ -30,7 +29,10 @@ export class ShopService {
 
   async create(createShopDto: CreateShopDto) {
     try {
-      const shop = await new this.shopModel(createShopDto).save();
+      const shop = await new this.shopModel(createShopDto).save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return shop;
     } catch (error) {
@@ -73,22 +75,18 @@ export class ShopService {
     }
   }
 
-  async findUserShops(userId: string, page: number = 0) {
+  async findUserShops(userId: string) {
     try {
       const shops = await this.shopModel
         .find({
           userID: userId,
+        }).catch(err => {
+          console.log(err);
+          throw new InternalServerErrorException(err);
         })
-        .limit(10)
-        .skip(page * 10);
 
-      const counts = await this.shopModel
-        .find({
-          userID: userId,
-        })
-        .countDocuments();
 
-      return { counts, shops };
+      return shops;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

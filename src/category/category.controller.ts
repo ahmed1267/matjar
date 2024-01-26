@@ -17,7 +17,7 @@ export class CategoryController {
     return this.categoryService.findAll(id);
   }
 
-  @Get(':id')
+  @Get('/one/:id')
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }
