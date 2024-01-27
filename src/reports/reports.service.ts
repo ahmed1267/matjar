@@ -224,7 +224,7 @@ export class ReportsService {
     const orderCountsByBuyer = new Map<string, number>();
 
     orders.forEach((order) => {
-      const buyerId = order.buyerID;
+      const buyerId = order.buyerId;
       orderCountsByBuyer.set(buyerId, (orderCountsByBuyer.get(buyerId) || 0) + 1);
     });
 

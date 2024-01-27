@@ -14,13 +14,7 @@ export class OrderController {
 
   @Get()
   findAll(@Query('buyerId') buyerId?: string, @Query('sellerId') sellerId?: string) {
-    if (buyerId) {
-      return this.orderService.findAllByBuyer(buyerId);
-    } else if (sellerId) {
-      return this.orderService.findAllBySeller(sellerId);
-    } else {
-      return { message: 'Please provide either buyerId or sellerId' };
-    }
+    return this.orderService.findAll(buyerId, sellerId);
   }
 
 
@@ -36,6 +30,6 @@ export class OrderController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+    return this.orderService.remove(id);
   }
 }

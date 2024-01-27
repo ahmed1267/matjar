@@ -16,13 +16,13 @@ export enum OrderStatusTypes {
 export class Order {
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  sellerID: string;
+  sellerId: string;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  buyerID: string;
+  buyerId: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Item' }], default: [] })
-  items: Types.Array<{ itemID: string; price: number }>;
+  items: Types.Array<{ itemId: string; price: number }>;
 
   @Prop({ required: true })
   deliveryType: boolean;
@@ -40,7 +40,7 @@ export class Order {
   comments: string;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'Shop' })
-  shopID: string;
+  shopId: string;
 
   createdAt: Date;
 
