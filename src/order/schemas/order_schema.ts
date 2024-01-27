@@ -5,10 +5,10 @@ import { Document, Types } from 'mongoose';
 export type OrderDocument = Order & Document;
 
 export enum OrderStatusTypes {
-    INPROGRESS = 'in_progress',
-    DELIVERED = 'delivered',
-    CANCELED = 'canceled'
-  }
+  INPROGRESS = 'in progress',
+  DELIVERED = 'delivered',
+  CANCELED = 'canceled'
+}
 // Define the shop schema
 @Schema({
   timestamps: true// Add timestamps for createdAt and updatedAt
@@ -18,28 +18,28 @@ export class Order {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   sellerID: string;
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'User'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   buyerID: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Item' }], default: [] })
   items: Types.Array<{ itemID: string; price: number }>;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   deliveryType: boolean;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   priceTotal: number;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   paid: boolean;
 
-  @Prop({required: true, enum:OrderStatusTypes, default:OrderStatusTypes.INPROGRESS})
+  @Prop({ required: true, enum: OrderStatusTypes, default: OrderStatusTypes.INPROGRESS })
   status: string;
 
   @Prop()
   comments: string;
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'Shop'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Shop' })
   shopID: string;
 
   createdAt: Date;

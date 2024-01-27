@@ -5,26 +5,26 @@ import { OrderStatusTypes } from '../schemas/order_schema';
 import { Types } from 'mongoose';
 
 export class UpdateOrderDto extends PartialType(CreateOrderDto) {
-    items?: Types.Array<{ itemID: string; price: number }>;
+  items: Types.Array<{ itemID: string; price: number }>;
 
-    deliveryType?: boolean;
+  deliveryType: boolean;
 
-    @IsNumber()
-    priceTotal?: number;;
 
-    @IsBoolean()
-    paid?: boolean;
+  priceTotal: number;
 
-    @IsEnum(OrderStatusTypes,{message: 'Invalid order Status'})
-    status?: string;
 
-    @IsString({ message: 'An order must have a string comment' })
-    @MinLength(10, {
-        message: 'An order comment must be 10 chracters minimum',
-      })
-      @MaxLength(150, {
-        message: 'An order comment must be 150 chracters maximum',
-      })
-    comments: string;
+  paid: boolean;
+
+  @IsEnum(OrderStatusTypes, { message: 'Invalid order Status' })
+  status: string;
+
+  @IsString({ message: 'An order must have a string comment' })
+  @MinLength(10, {
+    message: 'An order comment must be 10 chracters minimum',
+  })
+  @MaxLength(150, {
+    message: 'An order comment must be 150 chracters maximum',
+  })
+  comments: string;
 }
 
