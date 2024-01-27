@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Shop, ShopSchema } from 'src/shop/schemas/shop_schema';
 import { User, UserSchema } from 'src/user/schemas/user_schema';
 import { UserModule } from 'src/user/user.module';
-import { ReviewContainer, ReviewContainerSchema } from './schemas/ReviewContainer_schema';
+import { ReviewContainer, ReviewContainerSchema } from './schemas/reviewContainer_schema';
 import { Review, ReviewSchema } from 'src/review/schemas/review_schema';
 
 
