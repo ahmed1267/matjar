@@ -12,8 +12,9 @@ export class CategoryService {
     @InjectModel(Category.name) private readonly categoryModel: mongoose.Model<CategoryDocument>,
     @InjectModel(Shop.name) private readonly shopModel: mongoose.Model<ShopDocument>,
   ) { }
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CreateCategoryDto, userId: string) {
     try {
+      
       const category = await this.categoryModel.create(createCategoryDto).catch(err => {
         console.log(err);
         throw new InternalServerErrorException('An unexpected error happened while creating the category!')
