@@ -18,7 +18,9 @@ export class ItemService {
     try {
       const item = await new this.itemModel(createItemDto).save().catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+        if (err == 11000) throw new InternalServerErrorException('Item name already exists!')
+
+        else throw new InternalServerErrorException('An unexpected error happened while adding the item!');
       });
       const shop = await this.shopModel.findById(item.shopID).catch(err => {
         console.log(err);
