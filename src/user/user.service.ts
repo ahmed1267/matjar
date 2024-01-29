@@ -10,7 +10,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
@@ -57,7 +57,7 @@ export class UserService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -72,7 +72,7 @@ export class UserService {
 
       return { count, foundUsers };
     } catch (error) {
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -90,7 +90,7 @@ export class UserService {
       return foundUser;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -129,7 +129,7 @@ export class UserService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -160,7 +160,7 @@ export class UserService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
-        'An unexpected error happened while deleting the user',
+        error,
       );
     }
   }

@@ -32,12 +32,12 @@ export class PhotoSliderService {
     try {
       const photoSlider = await this.photoSliderModel.find().catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened!');
+        throw new InternalServerErrorException(err);
       })
       return photoSlider;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -45,7 +45,7 @@ export class PhotoSliderService {
     try {
       const photoSlider = await this.photoSliderModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the photo slider!');
+        throw new InternalServerErrorException(err);
 
 
       });
@@ -62,7 +62,7 @@ export class PhotoSliderService {
         new: true,
       }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while updating the photo slider!');
+        throw new InternalServerErrorException(err);
       });
 
       return photoSlider;
@@ -74,11 +74,11 @@ export class PhotoSliderService {
   async remove(id: string) {
     const photoSlider = await this.photoSliderModel.findById(id).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the photoSlider!');
+      throw new InternalServerErrorException(err);
     });
     const shop = await this.shopModel.findById(photoSlider.shop).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the photoSlider!');
+      throw new InternalServerErrorException(err);
 
     })
     for (let i = 0; i < shop.containers.length; i++) {
@@ -90,7 +90,7 @@ export class PhotoSliderService {
     await shop.save();
     await this.photoSliderModel.findByIdAndDelete(id).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the photoSlider!');
+      throw new InternalServerErrorException(err);
     })
     return photoSlider;
   }

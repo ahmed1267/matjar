@@ -31,13 +31,13 @@ export class ReviewContainerService {
       }
       await this.reviewContainerModel.create(reviewContainer).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while creating the review container!')
+        throw new InternalServerErrorException(err)
       })
       return 'Review Container created successfully!'
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(
-        'Unexpected error while adding the review container',
+        err
       );
     }
   }
@@ -46,12 +46,12 @@ export class ReviewContainerService {
     try {
       const reviewContainer = await this.reviewContainerModel.find().catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened!');
+        throw new InternalServerErrorException(err);
       })
       return reviewContainer;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -59,7 +59,7 @@ export class ReviewContainerService {
     try {
       const reviewContainer = await this.reviewContainerModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the review container!');
+        throw new InternalServerErrorException(err);
 
 
       });
@@ -76,7 +76,7 @@ export class ReviewContainerService {
         new: true,
       }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while updating the review Container!');
+        throw new InternalServerErrorException(err);
       });
 
       return reviewContainer;
@@ -89,11 +89,11 @@ export class ReviewContainerService {
     try {
       const reviewContainer = await this.reviewContainerModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the review Container!');
+        throw new InternalServerErrorException(err);
       });
       const shop = await this.shopModel.findById(reviewContainer.shop).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the review Container!');
+        throw new InternalServerErrorException(err);
 
       })
       for (let i = 0; i < shop.containers.length; i++) {
@@ -105,7 +105,7 @@ export class ReviewContainerService {
       await shop.save();
       const user = await this.userModel.findById(reviewContainer.user).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the review Container!');
+        throw new InternalServerErrorException(err);
       })
       for (let i = 0; i < user.reviews.length; i++) {
         if (user.reviews[i] === id) {
@@ -116,7 +116,7 @@ export class ReviewContainerService {
       await user.save();
       await this.reviewContainerModel.findByIdAndDelete(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the review Container!');
+        throw new InternalServerErrorException(err);
       })
       return reviewContainer;
     } catch (error) {

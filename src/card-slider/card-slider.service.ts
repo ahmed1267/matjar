@@ -23,7 +23,7 @@ export class CardSliderService {
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(
-        'Unexpected error while adding the CardSlider',
+        err
       );
     }
   }
@@ -32,12 +32,12 @@ export class CardSliderService {
     try {
       const cardSliders = await this.cardSliderModel.find().catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened!');
+        throw new InternalServerErrorException(err);
       })
       return cardSliders;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -45,7 +45,7 @@ export class CardSliderService {
     try {
       const cardSlider = await this.cardSliderModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the card slider!');
+        throw new InternalServerErrorException(err);
 
 
       });
@@ -62,7 +62,7 @@ export class CardSliderService {
         new: true,
       }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while updating the card slider!');
+        throw new InternalServerErrorException(err);
       });
 
       return cardSlider;
@@ -74,11 +74,11 @@ export class CardSliderService {
   async remove(id: string) {
     const cardSlider = await this.cardSliderModel.findById(id).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the cardSlider!');
+      throw new InternalServerErrorException(err);
     });
     const shop = await this.shopModel.findById(cardSlider.shop).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the cardSlider!');
+      throw new InternalServerErrorException(err);
 
     })
     for (let i = 0; i < shop.containers.length; i++) {
@@ -90,7 +90,7 @@ export class CardSliderService {
     await shop.save();
     await this.cardSliderModel.findByIdAndDelete(id).catch(err => {
       console.log(err);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the cardSlider!');
+      throw new InternalServerErrorException(err);
     })
     return cardSlider;
   }

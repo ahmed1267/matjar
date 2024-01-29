@@ -14,16 +14,16 @@ export class CategoryService {
   ) { }
   async create(createCategoryDto: CreateCategoryDto, userId: string) {
     try {
-      
+
       const category = await this.categoryModel.create(createCategoryDto).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while creating the category!')
+        throw new InternalServerErrorException(err)
       });
       await this.shopModel.findByIdAndUpdate(createCategoryDto.shopID, { $push: { categories: category.id } })
       return 'Category created successfully'
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while creating the category!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -31,12 +31,12 @@ export class CategoryService {
     try {
       const categories = await this.categoryModel.find({ shopID: id }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the categories!')
+        throw new InternalServerErrorException(err)
       })
       return categories;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while finding the categories!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -44,12 +44,12 @@ export class CategoryService {
     try {
       const category = await this.categoryModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the category!')
+        throw new InternalServerErrorException(err)
       })
       return category
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while finding the category!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -57,12 +57,12 @@ export class CategoryService {
     try {
       const category = await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, { new: true }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while updating the category!')
+        throw new InternalServerErrorException(err)
       })
       return category
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while updating the category!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -70,12 +70,12 @@ export class CategoryService {
     try {
       await this.categoryModel.findByIdAndDelete(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the category!')
+        throw new InternalServerErrorException(err)
       })
       return "Category has been deleted successfully"
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while deleting the category!');
+      throw new InternalServerErrorException(error);
     }
   }
 }

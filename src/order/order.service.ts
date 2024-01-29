@@ -28,13 +28,13 @@ export class OrderService {
       createOrderDto.priceTotal = priceTotal
       const order = await new this.orderModel(createOrderDto).save().catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while creating the order!')
+        throw new InternalServerErrorException(err)
       })
       return order
 
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while creating the order!')
+      throw new InternalServerErrorException(error)
     }
 
   }
@@ -52,13 +52,13 @@ export class OrderService {
         model: 'Item',
       }).exec().catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+        throw new InternalServerErrorException(err)
       })
 
       return orders
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -66,12 +66,12 @@ export class OrderService {
     try {
       const orders = await this.orderModel.find({ buyerID: id }).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+        throw new InternalServerErrorException(err)
       })
       return orders
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -79,12 +79,12 @@ export class OrderService {
     try {
       const orders = await this.orderModel.find({ buyerID: id }).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+        throw new InternalServerErrorException(err)
       })
       return orders
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the orders')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -92,12 +92,12 @@ export class OrderService {
     try {
       const order = await this.orderModel.findById(id).populate("items", "buyerId").catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while finding the order')
+        throw new InternalServerErrorException(err)
       })
       return order
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the order')
+      throw new InternalServerErrorException(error)
 
     }
   }
@@ -106,7 +106,7 @@ export class OrderService {
     try {
       const order = await this.orderModel.findById(id).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened when finding the order')
+        throw new InternalServerErrorException(err)
       })
       if (order.buyerId != buyerId) throw new UnauthorizedException("You can't adjust an order you didn't create")
       if (updateOrderDto.items) {
@@ -115,13 +115,13 @@ export class OrderService {
       }
       const newOrder = await this.orderModel.findByIdAndUpdate(id, updateOrderDto, { new: true }).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened when updating the order!')
+        throw new InternalServerErrorException(err)
       }
       )
       return newOrder
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the order')
+      throw new InternalServerErrorException(error)
 
     }
   }
@@ -130,12 +130,12 @@ export class OrderService {
     try {
       const order = await this.orderModel.findByIdAndDelete(id).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while deleting the order')
+        throw new InternalServerErrorException(err)
       })
       return 'Order has been deleted succesfully'
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while deleting the order')
+      throw new InternalServerErrorException(error)
     }
   }
 }

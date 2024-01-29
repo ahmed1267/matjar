@@ -71,7 +71,7 @@ export class ShopService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -114,7 +114,7 @@ export class ShopService {
       return items
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while finding shop items')
+      throw new InternalServerErrorException(error)
 
     }
   }
@@ -173,7 +173,7 @@ export class ShopService {
       return containers;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while finding shop containers')
+      throw new InternalServerErrorException(error)
     }
 
   }

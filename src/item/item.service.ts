@@ -20,23 +20,23 @@ export class ItemService {
         console.log(err);
         if (err == 11000) throw new InternalServerErrorException('Item name already exists!')
 
-        else throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+        else throw new InternalServerErrorException(err);
       });
       const shop = await this.shopModel.findById(item.shopID).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+        throw new InternalServerErrorException(err);
       })
 
       shop.itemsIDs.push(item.id);
       await shop.save().catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while adding the item!');
+        throw new InternalServerErrorException(err);
       })
       return item;
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(
-        'Unexpected error while adding the item',
+        err
       );
     }
   }
@@ -50,7 +50,7 @@ export class ItemService {
 
       const items = await this.itemModel.find({ ...query }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the items!');
+        throw new InternalServerErrorException(err);
 
       });
 
@@ -62,7 +62,7 @@ export class ItemService {
       return { count, items };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened!');
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -70,7 +70,7 @@ export class ItemService {
     try {
       const item = await this.itemModel.findById(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while finding the item!');
+        throw new InternalServerErrorException(err);
 
 
       });
@@ -86,7 +86,7 @@ export class ItemService {
         new: true,
       }).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while updating the item!');
+        throw new InternalServerErrorException(err);
       });
 
       return item;
@@ -99,7 +99,7 @@ export class ItemService {
     try {
       const item = await this.itemModel.findByIdAndRemove(id).catch(err => {
         console.log(err);
-        throw new InternalServerErrorException('An unexpected error happened while deleting the item!');
+        throw new InternalServerErrorException(err);
       });
       return item;
     } catch (error) {

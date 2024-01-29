@@ -30,7 +30,7 @@ export class CouponService {
         .limit(10)
         .skip(10 * page).catch(err => {
           console.log(err);
-          throw new InternalServerErrorException('An unexpected error happened while getting the coupons!');
+          throw new InternalServerErrorException(err);
         });
 
       return coupons;

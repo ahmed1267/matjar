@@ -14,12 +14,12 @@ export class ReviewService {
     try {
       const review = new this.reviewModel(createReviewDto).save().catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while creating the review!')
+        throw new InternalServerErrorException(err)
       })
       return review;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('An unexpected error happened while creating the review!')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -31,12 +31,12 @@ export class ReviewService {
       }
       const reviews = await this.reviewModel.find({ ...query }).exec().catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while retrieving reviews!')
+        throw new InternalServerErrorException(err)
       });
       return reviews;
     } catch (error) {
       console.error(error.message); // Log the detailed error message for debugging
-      throw new InternalServerErrorException('Failed to retrieve reviews');
+      throw new InternalServerErrorException(error);
     }
 
   }
@@ -45,12 +45,12 @@ export class ReviewService {
     try {
       const review = await this.reviewModel.findById(id).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while finding the review!')
+        throw new InternalServerErrorException(err)
       })
       return review
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while finding the review!')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -58,12 +58,12 @@ export class ReviewService {
     try {
       const review = await this.reviewModel.findByIdAndUpdate(id, updateReviewDto).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while updating the review!')
+        throw new InternalServerErrorException(err)
       })
       return review
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while updating the review!')
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -71,7 +71,7 @@ export class ReviewService {
     try {
       const review = await this.reviewModel.findById(id).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while getting the review!')
+        throw new InternalServerErrorException(err)
       })
 
       if (review.shop == userId) throw new BadRequestException('You cant delete reviews from your own shop!')
@@ -80,14 +80,14 @@ export class ReviewService {
 
       await this.reviewModel.deleteOne({ id }).catch(err => {
         console.log(err)
-        throw new InternalServerErrorException('An unexpected error happened while removing the review!')
+        throw new InternalServerErrorException(err)
       })
 
       return "review has been deleted successfully!"
 
     } catch (error) {
       console.log(error)
-      throw new InternalServerErrorException('An unexpected error happened while removing the review!')
+      throw new InternalServerErrorException(error)
     }
   }
 }
