@@ -12,14 +12,18 @@ export class CategoryService {
     @InjectModel(Category.name) private readonly categoryModel: mongoose.Model<CategoryDocument>,
     @InjectModel(Shop.name) private readonly shopModel: mongoose.Model<ShopDocument>,
   ) { }
-  async create(createCategoryDto: CreateCategoryDto, userId: string) {
+  async create(createCategoryDto: CreateCategoryDto) {
     try {
 
       const category = await this.categoryModel.create(createCategoryDto).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err)
       });
-      await this.shopModel.findByIdAndUpdate(createCategoryDto.shopID, { $push: { categories: category.id } })
+      await this.shopModel.findByIdAndUpdate(createCategoryDto.shopID, { $push: { categories: category.id } }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err)
+
+      })
       return 'Category created successfully'
     } catch (error) {
       console.log(error);
