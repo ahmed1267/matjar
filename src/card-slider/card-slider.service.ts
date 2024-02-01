@@ -28,9 +28,9 @@ export class CardSliderService {
     }
   }
 
-  async findAll() {
+  async findAll(id: string) {
     try {
-      const cardSliders = await this.cardSliderModel.find().catch(err => {
+      const cardSliders = await this.cardSliderModel.find({ shop: id }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })

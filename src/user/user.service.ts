@@ -10,15 +10,17 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
+import { Shop } from 'src/shop/schemas/shop_schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+
     private readonly jwtService: JwtService,
   ) { }
   async register(createUserDto: CreateUserDto) {
@@ -69,7 +71,9 @@ export class UserService {
         .skip(page * 10);
 
       const count = await this.userModel.find().countDocuments();
-
+      foundUsers.forEach((user) => {
+        user.password = undefined;
+      })
       return { count, foundUsers };
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -81,7 +85,10 @@ export class UserService {
       var checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$")
       const idValid = checkForHexRegExp.test(id);
       if (!idValid) throw new BadRequestException('Please enter correct Id');
-      const foundUser = await this.userModel.findById(id).catch((err) => {
+      const foundUser = await this.userModel.findById(id).populate({
+        path: 'cart.orderId',
+        model: 'Order',
+      }).exec().catch((err) => {
         console.log(err);
         throw new NotFoundException('An unexpected error happened while finding the user!');
       });
@@ -141,7 +148,7 @@ export class UserService {
       });
       if (!user) throw new NotFoundException('This user doesnt exist');
       if (user.role == 'admin' || userId == deleteId) {
-        const deletedUser = this.userModel
+        const deletedUser = await this.userModel
           .findByIdAndDelete(deleteId)
           .catch((err) => {
             console.log(err);
@@ -152,6 +159,7 @@ export class UserService {
         if (!deletedUser) {
           throw new NotFoundException('User to delete not found');
         }
+
         return 'User Deleted Successfully';
       } else
         throw new UnauthorizedException(

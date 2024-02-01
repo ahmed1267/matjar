@@ -15,6 +15,7 @@ import {
   UserExperienceType,
   UserRole,
 } from '../schemas/user_schema';
+import { Types } from 'mongoose';
 
 export class CreateUserDto {
   // Shop title, must not be empty, and should be a string
@@ -63,4 +64,7 @@ export class CreateUserDto {
   @IsEnum(ReadyOption, { each: true, message: 'Invalid ready option' })
   @ArrayUnique({ message: 'Duplicate ready options are not allowed' })
   ready: ReadyOption[];
+
+  wallet: number
+  cart: Types.ObjectId[]
 }

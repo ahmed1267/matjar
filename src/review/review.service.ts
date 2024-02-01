@@ -35,7 +35,7 @@ export class ReviewService {
       });
       return reviews;
     } catch (error) {
-      console.error(error.message); // Log the detailed error message for debugging
+      console.error(error);
       throw new InternalServerErrorException(error);
     }
 

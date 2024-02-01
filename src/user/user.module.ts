@@ -12,6 +12,8 @@ import { OtpController } from './otp/otp.controller';
 import { Otp, OtpSchema } from './schemas/otp-schema';
 import { EmailService } from './email/email.service';
 import { ConfigModule } from '@nestjs/config';
+import { Shop, ShopSchema } from 'src/shop/schemas/shop_schema';
+import { ShopModule } from 'src/shop/shop.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Otp.name, schema: OtpSchema },
+
     ]),
     JwtModule.register({
       secret: `${process.env.SECRET}`,

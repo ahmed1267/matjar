@@ -30,10 +30,17 @@ export class ProductSliderService {
 
   async findAll(id) {
     try {
-      const productSlider = await this.productSliderModel.find({ shop: id }).catch(err => {
-        console.log(err);
-        throw new InternalServerErrorException(err);
-      })
+      const productSlider = await this.productSliderModel
+        .find({ shop: id })
+        .populate({
+          path: 'products',
+          model: 'Item',
+        })
+        .exec()
+        .catch((err) => {
+          console.log(err);
+          throw new InternalServerErrorException(err);
+        });
       return productSlider;
     } catch (error) {
       console.log(error);
@@ -42,7 +49,10 @@ export class ProductSliderService {
   }
   async findOne(id: string) {
     try {
-      const productSlider = await this.productSliderModel.findById(id).catch(err => {
+      const productSlider = await this.productSliderModel.findById(id).populate({
+        path: 'products.itemId',
+        model: 'Item',
+      }).exec().catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
 
