@@ -7,14 +7,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
-import { ShopService } from 'src/user/shop.service';
+import { User, UserDocument } from 'src/user/schemas/user_schema';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { ShopService } from './shop.service';
 
 @Injectable()
 export class UserService {
@@ -23,6 +23,7 @@ export class UserService {
     private readonly shopService: ShopService,
     private readonly jwtService: JwtService,
   ) {}
+
   async register(createUserDto: CreateUserDto) {
     try {
       const { email } = createUserDto;

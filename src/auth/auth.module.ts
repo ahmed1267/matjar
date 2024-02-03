@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
@@ -8,26 +8,52 @@ import { User, UserSchema } from 'src/user/schemas/user_schema';
 
 import { PassportModule } from '@nestjs/passport';
 import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
-import { UserModule } from 'src/user/user.module';
-import { UserService } from 'src/user/user.service';
-
-
-
+import { UserService } from './user.service';
+import { ShopService } from './shop.service';
+import { Shop, ShopSchema } from 'src/shop/schemas/shop_schema';
+import { Item, ItemSchema } from 'src/item/schemas/item-schema';
+import { Category, CategorySchema } from 'src/category/schemas/category_schema';
+import {
+  ProductSlider,
+  ProductSliderSchema,
+} from 'src/product-slider/schemas/productSlider_schema';
+import {
+  CardSlider,
+  CardSliderSchema,
+} from 'src/card-slider/schemas/cardSlider_schema';
+import {
+  PhotoSlider,
+  PhotoSliderSchema,
+} from 'src/photo-slider/schemas/photoSlider_schema';
+import { Review, ReviewSchema } from 'src/review/schemas/review_schema';
+import {
+  ReviewContainer,
+  ReviewContainerSchema,
+} from 'src/review-container/schemas/reviewContainer_schema';
 
 @Module({
   providers: [
     AuthService,
-    UserService,
+    ShopService,
     LocalStrategy,
     RefreshJwtStrategy,
+    UserService,
   ],
   controllers: [AuthController],
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Shop.name, schema: ShopSchema },
+      { name: Item.name, schema: ItemSchema },
+      { name: Category.name, schema: CategorySchema },
+      { name: ProductSlider.name, schema: ProductSliderSchema },
+      { name: CardSlider.name, schema: CardSliderSchema },
+      { name: PhotoSlider.name, schema: PhotoSliderSchema },
+      { name: Review.name, schema: ReviewSchema },
+      { name: ReviewContainer.name, schema: ReviewContainerSchema },
+    ]),
     PassportModule,
-
   ],
-  exports: [AuthService, LocalStrategy],
+  exports: [AuthService],
 })
-export class AuthModule { }
-
+export class AuthModule {}
