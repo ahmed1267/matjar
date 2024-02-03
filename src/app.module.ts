@@ -20,7 +20,6 @@ import { CardSliderModule } from './card-slider/card-slider.module';
 import { CategoryModule } from './category/category.module';
 import { ReviewModule } from './review/review.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,23 +34,21 @@ import { ReviewModule } from './review/review.module';
     MongooseModule.forRoot(process.env.DB_URI),
     ShopModule,
     UserModule,
+    AuthModule,
+    AdminModule,
+    ReviewContainerModule,
     ItemModule,
     OrderModule,
-    AuthModule,
     CouponModule,
     ReportsModule,
-    AdminModule,
     CardSliderModule,
-    ReviewContainerModule,
     ProductSliderModule,
     PhotoSliderModule,
     CategoryModule,
-    ReviewModule
+    ReviewModule,
+    PassportModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PassportModule, UserModule, ShopModule, CardSliderModule,
-    ReviewModule,
-    ProductSliderModule,
-    PhotoSliderModule],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

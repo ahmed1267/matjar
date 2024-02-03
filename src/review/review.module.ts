@@ -5,11 +5,11 @@ import { Review, ReviewSchema } from './schemas/review_schema';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forFeature([
-    { name: Review.name, schema: ReviewSchema },])],
+  imports: [
+    MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
+  ],
   controllers: [ReviewController],
   providers: [ReviewService],
-  exports: [ReviewService, MongooseModule.forFeature([
-    { name: Review.name, schema: ReviewSchema },])]
+  exports: [ReviewService],
 })
-export class ReviewModule { }
+export class ReviewModule {}
