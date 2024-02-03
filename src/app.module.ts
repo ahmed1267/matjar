@@ -52,6 +52,6 @@ import { ReviewModule } from './review/review.module';
   providers: [AppService, PassportModule, UserModule, ShopModule, CardSliderModule,
     ReviewModule,
     ProductSliderModule,
-    PhotoSliderModule],
+    PhotoSliderModule, ReviewContainerModule],
 })
 export class AppModule { }

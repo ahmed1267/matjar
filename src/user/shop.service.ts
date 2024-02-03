@@ -10,10 +10,8 @@ import {
 
 import * as mongoose from 'mongoose';
 
-import { Shop, ShopDocument } from './schemas/shop_schema';
+;
 import { InjectModel } from '@nestjs/mongoose';
-import { UpdateShopDto } from './dto/update-shop.dto';
-import { CreateShopDto } from './dto/create-shop.dto';
 import { Review, ReviewDocument } from 'src/review/schemas/review_schema';
 import { ProductSlider, ProductSliderDocument } from 'src/product-slider/schemas/productSlider_schema';
 import { PhotoSlider, PhotoSliderDocument } from 'src/photo-slider/schemas/photoSlider_schema';
@@ -24,6 +22,9 @@ import { User, UserDocument } from 'src/user/schemas/user_schema';
 import { UserService } from 'src/user/user.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
+import { CreateShopDto } from 'src/shop/dto/create-shop.dto';
+import { UpdateShopDto } from 'src/shop/dto/update-shop.dto';
+import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
 
 @Injectable()
 export class ShopService {

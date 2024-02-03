@@ -39,8 +39,8 @@ export class Coupon {
   })
   discountPercentage: number;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  user: string;
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Shop' })
+  shop: string;
 
   @Prop({ required: true, type: [Types.ObjectId], ref: 'Item', maxlength: 100 })
   items: string[];

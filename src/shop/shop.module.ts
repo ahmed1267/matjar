@@ -11,15 +11,30 @@ import { CardSlider, CardSliderSchema } from 'src/card-slider/schemas/cardSlider
 import { CardSliderModule } from 'src/card-slider/card-slider.module';
 import { PhotoSliderModule } from 'src/photo-slider/photo-slider.module';
 import { ProductSliderModule } from 'src/product-slider/product-slider.module';
+import { Category, CategorySchema } from 'src/category/schemas/category_schema';
+import { Item, ItemSchema } from 'src/item/schemas/item-schema';
+import { User, UserSchema } from 'src/user/schemas/user_schema';
+import { UserModule } from 'src/user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { CategoryModule } from 'src/category/category.module';
+import { ItemModule } from 'src/item/item.module';
+import { ReviewContainer, ReviewContainerSchema } from 'src/review-container/schemas/reviewContainer_schema';
+import { ReviewContainerModule } from 'src/review-container/review-container.module';
 
 @Module({
   imports: [MongooseModule.forFeature([
     { name: Shop.name, schema: ShopSchema },
-    { name: Review.name, schema: ReviewSchema },
+    { name: Item.name, schema: ItemSchema },
+    { name: User.name, schema: UserSchema },
+    { name: Category.name, schema: CategorySchema },
     { name: ProductSlider.name, schema: ProductSliderSchema },
-    { name: PhotoSlider.name, schema: PhotoSliderSchema },
     { name: CardSlider.name, schema: CardSliderSchema },
-  ]), forwardRef(() => ProductSliderModule), forwardRef(() => PhotoSliderModule), forwardRef(() => CardSliderModule), forwardRef(() => ReviewModule), ShopModule],
+    { name: PhotoSlider.name, schema: PhotoSliderSchema },
+    { name: Review.name, schema: ReviewSchema },
+    { name: ReviewContainer.name, schema: ReviewContainerSchema },
+  ]), forwardRef(() => AuthModule), forwardRef(() => ProductSliderModule),
+  forwardRef(() => CategoryModule), forwardRef(() => ItemModule), forwardRef(() => PhotoSliderModule),
+  forwardRef(() => CardSliderModule), forwardRef(() => ReviewModule), forwardRef(() => UserModule), forwardRef(() => ReviewContainerModule), ShopModule],
   controllers: [ShopController],
   providers: [ShopService],
   exports: [ShopModule, MongooseModule.forFeature([{ name: Shop.name, schema: ShopSchema }]),]

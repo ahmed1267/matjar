@@ -1,10 +1,12 @@
 import {
   BadRequestException,
   HttpException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,12 +17,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
 import { Shop } from 'src/shop/schemas/shop_schema';
+import { ShopService } from 'src/user/shop.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-
+    private readonly shopService: ShopService,
     private readonly jwtService: JwtService,
   ) { }
   async register(createUserDto: CreateUserDto) {
@@ -148,6 +151,10 @@ export class UserService {
       });
       if (!user) throw new NotFoundException('This user doesnt exist');
       if (user.role == 'admin' || userId == deleteId) {
+        for (const shopId of user.shop) {
+          await this.shopService.remove(shopId);
+        }
+
         const deletedUser = await this.userModel
           .findByIdAndDelete(deleteId)
           .catch((err) => {
@@ -159,6 +166,7 @@ export class UserService {
         if (!deletedUser) {
           throw new NotFoundException('User to delete not found');
         }
+
 
         return 'User Deleted Successfully';
       } else
@@ -172,6 +180,8 @@ export class UserService {
       );
     }
   }
+
+
 
   private generateToken(user: UserDocument): string {
     const payload = { sub: user._id, email: user.email };
