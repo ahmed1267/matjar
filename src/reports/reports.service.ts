@@ -8,10 +8,12 @@ import { Item, ItemDocument } from 'src/item/schemas/item-schema';
 import { User, UserDocument } from 'src/user/schemas/user_schema';
 import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
 import moment from 'moment';
+import { Reports, ReportsDocument } from './schemas/reports_schema';
 
 @Injectable()
 export class ReportsService {
   constructor(
+    @InjectModel(Reports.name) private readonly reportsModel: Model<ReportsDocument>,
     @InjectModel(Shop.name) private readonly shopModel: Model<ShopDocument>,
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
@@ -21,9 +23,9 @@ export class ReportsService {
   async findOne(id: string, report: string, year?: string, month?: string) {
     const user = await this.userModel.findById(id).catch(err => {
       console.log(err)
-      throw new InternalServerErrorException('Unexpected error happened while finding the user!')
+      throw new InternalServerErrorException(err)
     })
-    if (user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
+    if (user.role != 'shop_owner' || !user) throw new UnauthorizedException("Invalid user")
     const shopId = user.shop
     switch (report) {
       case "monthlySales":
@@ -39,8 +41,16 @@ export class ReportsService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} report`;
+  async remove(id: string) {
+    try {
+      await this.reportsModel.findByIdAndDelete(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException('Unexpected error happened while removing the report!')
+      })
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(error);
+    };
   }
 
   async generateMonthlySalesReport(

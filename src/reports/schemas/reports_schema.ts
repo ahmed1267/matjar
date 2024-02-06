@@ -18,7 +18,7 @@ export class Reports {
   itemsSales: Types.Array<{ itemID: string; totalSales: number }>;
 
   // Clients and their ratings
-  @Prop({ type: [{ clientID: { type: Types.ObjectId, ref: 'Client' }, rating: Number }], default: [] })
+  @Prop({ type: [{ clientID: { type: Types.ObjectId, ref: 'User' }, rating: Number }], default: [] })
   clientRatings: Types.Array<{ clientID: string; rating: number }>;
 
   // Days with the highest order counts

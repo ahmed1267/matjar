@@ -5,15 +5,15 @@ import { UpdateReportDto } from './dto/update-report.dto';
 
 @Controller('reports')
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
+  constructor(private readonly reportsService: ReportsService) { }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Body('report') report: string, @Body('year') year?:string, @Body('month') month?: string) {
-    return this.reportsService.findOne(id, year , month, report);
+  findOne(@Param('id') id: string, @Body('report') report: string, @Body('year') year?: string, @Body('month') month?: string) {
+    return this.reportsService.findOne(id, year, month, report);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.reportsService.remove(+id);
+    return this.reportsService.remove(id);
   }
 }
