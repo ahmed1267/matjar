@@ -3,5 +3,9 @@ import { CreateCouponDto } from './create-coupon.dto';
 import { Types } from 'mongoose';
 
 export class UpdateCouponDto extends PartialType(CreateCouponDto) {
-  id: Types.ObjectId;
+  text: string;
+  endDate: Date;
+  numOfTimes: number;
+  numOfCustomers: number;
+  discountPercentage: number;
 }

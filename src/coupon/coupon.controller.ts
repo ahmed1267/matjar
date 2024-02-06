@@ -16,7 +16,7 @@ import { Types } from 'mongoose';
 
 @Controller('coupon')
 export class CouponController {
-  constructor(private readonly couponService: CouponService) {}
+  constructor(private readonly couponService: CouponService) { }
 
   @Post()
   create(@Body() createCouponDto: CreateCouponDto) {
@@ -28,10 +28,10 @@ export class CouponController {
     return this.couponService.findAll();
   }
 
-  @Patch('/discount')
-  changeDiscount(@Body() updateCouponDto: UpdateCouponDto) {
+  @Patch('/discount/:id')
+  changeDiscount(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
     return this.couponService.changeDiscount(
-      updateCouponDto.id,
+      id,
       updateCouponDto.discountPercentage,
     );
   }

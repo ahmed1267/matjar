@@ -13,7 +13,10 @@ export class CouponService {
 
   async create(createCouponDto: CreateCouponDto) {
     try {
-      const coupon = await new this.couponModel(createCouponDto).save();
+      const coupon = await new this.couponModel(createCouponDto).save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return coupon;
     } catch (error) {
@@ -41,7 +44,10 @@ export class CouponService {
 
   async findOne(id: Types.ObjectId) {
     try {
-      const coupon = await this.couponModel.findById(id);
+      const coupon = await this.couponModel.findById(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return coupon;
     } catch (error) {
@@ -55,7 +61,10 @@ export class CouponService {
         id,
         updateCouponDto,
         { new: true },
-      );
+      ).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return coupon;
     } catch (error) {
@@ -65,7 +74,10 @@ export class CouponService {
 
   async remove(id: Types.ObjectId) {
     try {
-      const coupon = await this.couponModel.findByIdAndRemove(id);
+      const coupon = await this.couponModel.findByIdAndRemove(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return coupon;
     } catch (error) {
@@ -79,6 +91,9 @@ export class CouponService {
         $push: {
           subscriptCustomers: customer,
         },
+      }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
       });
 
       return updatedCoupon;
@@ -93,6 +108,9 @@ export class CouponService {
         $push: {
           items: item,
         },
+      }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
       });
 
       return updatedCoupon;
@@ -101,12 +119,14 @@ export class CouponService {
     }
   }
 
-  async changeDiscount(id: Types.ObjectId, discount: number) {
+  async changeDiscount(id: string, discount: number) {
     try {
       const coupon = await this.couponModel.findByIdAndUpdate(id, {
         discountPercentage: discount,
+      }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
       });
-
       return coupon;
     } catch (error) {
       throw new InternalServerErrorException(error, "Can't Add Item");
