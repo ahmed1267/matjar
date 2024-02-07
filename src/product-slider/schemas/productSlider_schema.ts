@@ -11,7 +11,7 @@ export type ProductSliderDocument = ProductSlider & Document;
 export class ProductSlider {
 
     @Prop({ type: [Types.ObjectId], ref: 'Item' })
-    products: string[];
+    products: Types.Array<string>;
     title: string;
     isSlider: boolean = false;
     @Prop({ type: Types.ObjectId, ref: 'Shop' })

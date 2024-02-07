@@ -9,12 +9,14 @@ import { User, UserSchema } from 'src/user/schemas/user_schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]), 
-    MongooseModule.forFeature([{ name: Shop.name, schema: ShopSchema }]), 
-    MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]), 
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: Order.name, schema: OrderSchema },
+      { name: Shop.name, schema: ShopSchema },
+      { name: Item.name, schema: ItemSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
   ],
   controllers: [ReportsController],
-  providers: [ReportsService, Order, Shop, Item, User],
+  providers: [ReportsService],
 })
 export class ReportsModule {}

@@ -13,8 +13,8 @@ export class OrderController {
   }
 
   @Get()
-  findAll(@Query('buyerId') buyerId?: string, @Query('sellerId') sellerId?: string) {
-    return this.orderService.findAll(buyerId, sellerId);
+  findAll(@Query('buyerId') buyerId?: string, @Query('sellerId') sellerId?: string, @Query('shopId') shopId?: string) {
+    return this.orderService.findAll(buyerId, sellerId, shopId);
   }
 
 

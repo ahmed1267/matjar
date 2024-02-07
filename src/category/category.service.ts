@@ -12,14 +12,24 @@ export class CategoryService {
     @InjectModel(Category.name) private readonly categoryModel: mongoose.Model<CategoryDocument>,
     @InjectModel(Shop.name) private readonly shopModel: mongoose.Model<ShopDocument>,
   ) { }
-  async create(createCategoryDto: CreateCategoryDto, userId: string) {
+  async create(createCategoryDto: CreateCategoryDto, id: string) {
     try {
-
+      const shop = await this.shopModel.findById(createCategoryDto.shopID).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err)
+      })
+      if (shop.userID != id) {
+        throw new InternalServerErrorException('You are not authorized to create a category for this shop')
+      }
       const category = await this.categoryModel.create(createCategoryDto).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err)
       });
-      await this.shopModel.findByIdAndUpdate(createCategoryDto.shopID, { $push: { categories: category.id } })
+      await this.shopModel.findByIdAndUpdate(createCategoryDto.shopID, { $push: { categories: category.id } }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err)
+
+      })
       return 'Category created successfully'
     } catch (error) {
       console.log(error);
@@ -56,18 +66,18 @@ export class CategoryService {
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     try {
       let category
-      if(updateCategoryDto.subCategory){
-        category= await this.categoryModel.findById(id).catch(err=> {
+      if (updateCategoryDto.subCategory) {
+        category = await this.categoryModel.findById(id).catch(err => {
           console.log(err);
-          throw new InternalServerErrorException(err)          
+          throw new InternalServerErrorException(err)
         })
         category.subCategory.push(updateCategoryDto.subCategory)
         category = await category.save().catch(err => {
           console.log(err);
           throw new InternalServerErrorException(err)
         })
-      }else{
-        
+      } else {
+
         category = await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, { new: true }).catch(err => {
           console.log(err);
           throw new InternalServerErrorException(err)

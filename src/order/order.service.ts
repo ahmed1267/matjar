@@ -39,9 +39,9 @@ export class OrderService {
 
   }
 
-  async findAll(buyerId: string, sellerId: string) {
+  async findAll(buyerId: string, sellerId: string, shopId: string) {
     try {
-      const query = { buyerId, sellerId }
+      const query = { buyerId, sellerId, shopId }
 
       for (let key in query) {
         if (!query[key]) delete query[key]
@@ -62,31 +62,6 @@ export class OrderService {
     }
   }
 
-  async findAllByBuyer(id) {
-    try {
-      const orders = await this.orderModel.find({ buyerID: id }).catch(err => {
-        console.log(err)
-        throw new InternalServerErrorException(err)
-      })
-      return orders
-    } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException(error)
-    }
-  }
-
-  async findAllBySeller(id) {
-    try {
-      const orders = await this.orderModel.find({ buyerID: id }).catch(err => {
-        console.log(err)
-        throw new InternalServerErrorException(err)
-      })
-      return orders
-    } catch (error) {
-      console.log(error)
-      throw new InternalServerErrorException(error)
-    }
-  }
 
   async findOne(id: string) {
     try {

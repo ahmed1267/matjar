@@ -13,6 +13,7 @@ import {
   UserExperienceType,
   UserRole,
 } from '../schemas/user_schema';
+import { Types } from 'mongoose';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -59,4 +60,7 @@ export class UpdateUserDto {
   @IsEnum(ReadyOption, { each: true, message: 'Invalid ready option' })
   @ArrayUnique({ message: 'Duplicate ready options are not allowed' })
   ready?: ReadyOption[];
+
+  wallet: number
+  cart: Types.ObjectId[]
 }

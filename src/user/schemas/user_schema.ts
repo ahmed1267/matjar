@@ -75,6 +75,12 @@ export class User {
 
   @Prop({ type: [Types.ObjectId], ref: 'User' })
   reviews: string[];
+
+  @Prop({ type: [Types.ObjectId], ref: 'Order' })
+  cart: string[]
+
+  @Prop({ default: 0 })
+  wallet: number
 }
 
 // Create the Mongoose schema for the user class
