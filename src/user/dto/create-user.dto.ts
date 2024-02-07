@@ -42,7 +42,6 @@ export class CreateUserDto {
   email: string;
 
   @Prop({ required: true, unique: true })
-  @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^(\+\d{1,3}[- ]?)?\d{10}$/, {
     message: 'Invalid phone number format',
   })
