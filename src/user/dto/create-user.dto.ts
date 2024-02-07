@@ -37,7 +37,6 @@ export class CreateUserDto {
   role: UserRole;
 
   @Prop({ required: true, unique: true })
-  @IsNotEmpty({ message: 'Email is required' })
   @IsEmail()
   email: string;
 
@@ -47,7 +46,7 @@ export class CreateUserDto {
   })
   phone: string;
 
-  @IsNotEmpty({ message: 'A user must have user experinece' })
+
   experince: boolean;
 
   @IsNotEmpty({
@@ -55,7 +54,7 @@ export class CreateUserDto {
   })
   firstShop: boolean;
 
-  @IsNotEmpty({ message: 'A user must have user experinece type' })
+
   @IsEnum(UserExperienceType, { message: 'Invalid Experience Type' })
   userExperienceType: UserExperienceType;
 
