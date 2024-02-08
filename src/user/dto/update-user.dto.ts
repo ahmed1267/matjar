@@ -62,5 +62,6 @@ export class UpdateUserDto {
   ready?: ReadyOption[];
 
   wallet: number
+  orders: Types.ObjectId[]
   cart: Types.ObjectId[]
 }

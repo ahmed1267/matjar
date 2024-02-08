@@ -66,5 +66,6 @@ export class CreateUserDto {
   ready: ReadyOption[];
 
   wallet: number
+  orders: Types.ObjectId[]
   cart: Types.ObjectId[]
 }
