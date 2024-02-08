@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   HttpException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -10,11 +11,14 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
 import { ShopService } from 'src/user/shop.service';
+import { Order, OrderDocument, OrderStatusTypes } from 'src/order/schemas/order_schema';
+import { CreateOrderDto } from 'src/order/dto/create-order.dto';
+import { Item, ItemDocument } from 'src/item/schemas/item-schema';
 
 @Injectable()
 export class UserService {
@@ -22,6 +26,8 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly shopService: ShopService,
     private readonly jwtService: JwtService,
+    @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
+    @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>
   ) {}
   async register(createUserDto: CreateUserDto) {
     try {
@@ -157,6 +163,46 @@ export class UserService {
       if (error instanceof HttpException) throw error;
       console.log(error);
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async checkOut(id: string, sellerID: string, shop: string) {
+    try {
+      const user = await this.userModel.findById(id).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+  
+      const itemsInCart = await this.itemModel.find({ _id: { $in: user.cart } }).exec();
+  
+      let totalPrice = 0;
+      itemsInCart.forEach(item => {
+        totalPrice += item.price;
+      });
+  
+      const orderDto: CreateOrderDto = {
+        buyerId: id,
+        sellerId: sellerID,
+        items: itemsInCart.map(item => ({ itemID: item._id.toString(), price: item.price })) as Types.Array<{ itemID: string; price: number; }>,
+        deliveryType: false, 
+        paid: false, 
+        status: OrderStatusTypes.INPROGRESS, 
+        comments: 'Sample comment',
+        shopId: shop, 
+        priceTotal: totalPrice
+      };
+  
+   
+      const createdOrder = await this.orderModel.create(orderDto);
+  
+   
+      user.orders.push(createdOrder._id);
+      await user.save();
+  
+      return "Order created successfully!";
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException('Failed to create order');
     }
   }
 
