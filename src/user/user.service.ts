@@ -88,7 +88,7 @@ export class UserService {
       const foundUser = await this.userModel
         .findById(id)
         .populate({
-          path: 'cart.orderId',
+          path: 'cart',
           model: 'Order',
         })
         .exec()
@@ -119,14 +119,27 @@ export class UserService {
   }
   async update(updateUserDto: UpdateUserDto) {
     try {
-      const { currentId, updateId, ...data } = updateUserDto;
+      const { currentId, updateId, cart, orders} = updateUserDto;
+      const data = { ...updateUserDto };
       const user = await this.userModel.findById(currentId).catch((err) => {
         console.log(err);
-        throw new NotFoundException('This user doesnt exist');
+        throw new NotFoundException('This user doesn\'t exist');
       });
-
-      if (updateId === currentId || user.role == 'admin') {
-        const updatedUser = await this.userModel
+  
+      if (updateId === currentId || user.role === 'admin') {
+        let updatedUser;
+  
+        if (cart) {
+          const updatedCart = [...user.cart, ...cart];
+          data.cart = updatedCart;
+        }
+  
+        if (orders) {
+          const updatedOrders = [...user.orders, ...orders];
+          data.orders = updatedOrders;
+        }
+  
+        updatedUser = await this.userModel
           .findByIdAndUpdate(updateId, data, { new: true })
           .catch((err) => {
             console.log(err);
@@ -134,10 +147,11 @@ export class UserService {
               'Unexpected error while updating user',
             );
           });
+  
         updatedUser.password = undefined;
         return updatedUser;
       } else {
-        throw new UnauthorizedException('Unathorized error');
+        throw new UnauthorizedException('Unauthorized error');
       }
     } catch (error) {
       if (error instanceof HttpException) throw error;

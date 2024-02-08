@@ -64,6 +64,10 @@ export class CreateUserDto {
   ready: ReadyOption[];
 
   wallet: number
+
+  @Prop({ type: [Types.ObjectId], ref: 'Order' })
   orders: Types.ObjectId[]
+
+  @Prop({ type: [Types.ObjectId], ref: 'Item' })
   cart: Types.ObjectId[]
 }
