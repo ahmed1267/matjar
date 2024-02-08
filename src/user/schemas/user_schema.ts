@@ -51,17 +51,17 @@ export class User {
   })
   email: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ unique: true })
   phone: string;
 
-  @Prop({ required: true, default: false })
+  @Prop({ default: false })
   experience: boolean;
 
-  @Prop({ required: true, default: false })
+  @Prop({ default: false })
   firstShop: boolean;
 
   @Prop({
-    required: true,
+
     enum: UserExperienceType,
     default: UserExperienceType.STORE,
   })

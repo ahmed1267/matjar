@@ -37,18 +37,16 @@ export class CreateUserDto {
   role: UserRole;
 
   @Prop({ required: true, unique: true })
-  @IsNotEmpty({ message: 'Email is required' })
   @IsEmail()
   email: string;
 
   @Prop({ required: true, unique: true })
-  @IsNotEmpty({ message: 'Phone number is required' })
   @Matches(/^(\+\d{1,3}[- ]?)?\d{10}$/, {
     message: 'Invalid phone number format',
   })
   phone: string;
 
-  @IsNotEmpty({ message: 'A user must have user experinece' })
+
   experince: boolean;
 
   @IsNotEmpty({
@@ -56,7 +54,7 @@ export class CreateUserDto {
   })
   firstShop: boolean;
 
-  @IsNotEmpty({ message: 'A user must have user experinece type' })
+
   @IsEnum(UserExperienceType, { message: 'Invalid Experience Type' })
   userExperienceType: UserExperienceType;
 
