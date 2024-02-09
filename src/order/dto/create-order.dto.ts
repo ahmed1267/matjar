@@ -44,6 +44,8 @@ export class CreateOrderDto {
   })
   comments: string;
 
+  @IsNotEmpty({ message: 'An order must have a shop' })
+  shopId: string;
 
   priceTotal: number;
 }

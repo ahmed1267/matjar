@@ -57,6 +57,11 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Patch('/checkout/:id')
+  checkout(@Param('id') id: string, @Body('sellerID') sellerID: string, @Body('shop') shop: string) {
+    return this.userService.checkOut(id, sellerID, shop);
+  }
+
   @Patch()
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto);

@@ -33,6 +33,7 @@ import {
   ReviewContainer,
   ReviewContainerSchema,
 } from 'src/review-container/schemas/reviewContainer_schema';
+import { Order, OrderSchema } from 'src/order/schemas/order_schema';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import {
     }),
     MongooseModule.forFeature([
       { name: Shop.name, schema: ShopSchema },
+      { name: Order.name, schema: OrderSchema },
       { name: User.name, schema: UserSchema },
       { name: Otp.name, schema: OtpSchema },
       { name: Item.name, schema: ItemSchema },

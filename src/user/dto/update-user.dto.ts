@@ -6,6 +6,7 @@ import {
   IsEnum,
   ArrayUnique,
   IsNotEmpty,
+  IsArray,
 } from 'class-validator';
 
 import {
@@ -14,6 +15,7 @@ import {
   UserRole,
 } from '../schemas/user_schema';
 import { Types } from 'mongoose';
+import { Prop } from '@nestjs/mongoose';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -61,6 +63,11 @@ export class UpdateUserDto {
   @ArrayUnique({ message: 'Duplicate ready options are not allowed' })
   ready?: ReadyOption[];
 
-  wallet: number
-  cart: Types.ObjectId[]
+  wallet?: number
+
+  @Prop({ type: [Types.ObjectId], ref: 'Order' })
+  orders?: string[]
+  
+  @Prop({ type: [Types.ObjectId], ref: 'Item' })
+  cart?: string[]
 }
