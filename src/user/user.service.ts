@@ -28,7 +28,7 @@ export class UserService {
     private readonly jwtService: JwtService,
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
     @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>
-  ) {}
+  ) { }
   async register(createUserDto: CreateUserDto) {
     try {
       const { email } = createUserDto;
@@ -123,37 +123,41 @@ export class UserService {
         throw new NotFoundException('This user doesnt exist');
       });
   }
+
   async update(updateUserDto: UpdateUserDto) {
     try {
-      const { currentId, updateId, cart, orders} = updateUserDto;
-      const data = { ...updateUserDto };
+      const { currentId, updateId, cart, orders } = updateUserDto;
       const user = await this.userModel.findById(currentId).catch((err) => {
         console.log(err);
         throw new NotFoundException('This user doesn\'t exist');
       });
-  
+
       if (updateId === currentId || user.role === 'admin') {
         let updatedUser;
-  
-        if (cart) {
-          const updatedCart = [...user.cart, ...cart];
-          data.cart = updatedCart;
+
+        if (cart && cart.length > 0) {
+          const itemToAdd = cart[0];
+          const existingItemIndex = user.cart.findIndex((itemId) => itemId === itemToAdd);
+          if (existingItemIndex !== -1) {
+            user.cart.splice(existingItemIndex, 1);
+          }
+          user.cart.push(itemToAdd);
         }
-  
+
         if (orders) {
           const updatedOrders = [...user.orders, ...orders];
-          data.orders = updatedOrders;
+          updateUserDto.orders = updatedOrders;
         }
-  
+
         updatedUser = await this.userModel
-          .findByIdAndUpdate(updateId, data, { new: true })
+          .findByIdAndUpdate(updateId, updateUserDto, { new: true })
           .catch((err) => {
             console.log(err);
             throw new InternalServerErrorException(
               'Unexpected error while updating user',
             );
           });
-  
+
         updatedUser.password = undefined;
         return updatedUser;
       } else {
@@ -166,39 +170,41 @@ export class UserService {
     }
   }
 
+
+
   async checkOut(id: string, sellerID: string, shop: string) {
     try {
       const user = await this.userModel.findById(id).exec();
       if (!user) {
         throw new NotFoundException('User not found');
       }
-  
+
       const itemsInCart = await this.itemModel.find({ _id: { $in: user.cart } }).exec();
-  
+
       let totalPrice = 0;
       itemsInCart.forEach(item => {
         totalPrice += item.price;
       });
-  
+
       const orderDto: CreateOrderDto = {
         buyerId: id,
         sellerId: sellerID,
         items: itemsInCart.map(item => ({ itemID: item._id.toString(), price: item.price })) as Types.Array<{ itemID: string; price: number; }>,
-        deliveryType: false, 
-        paid: false, 
-        status: OrderStatusTypes.INPROGRESS, 
+        deliveryType: false,
+        paid: false,
+        status: OrderStatusTypes.INPROGRESS,
         comments: 'Sample comment',
-        shopId: shop, 
+        shopId: shop,
         priceTotal: totalPrice
       };
-  
-   
+
+
       const createdOrder = await this.orderModel.create(orderDto);
-  
-   
+
+
       user.orders.push(createdOrder._id);
       await user.save();
-  
+
       return "Order created successfully!";
     } catch (error) {
       console.error(error);
