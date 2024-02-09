@@ -71,7 +71,9 @@ export class CategoryService {
           console.log(err);
           throw new InternalServerErrorException(err)
         })
-        category.subCategory.push(updateCategoryDto.subCategory)
+
+        category.subCategory.push(...updateCategoryDto.subCategory)
+
         category = await category.save().catch(err => {
           console.log(err);
           throw new InternalServerErrorException(err)
