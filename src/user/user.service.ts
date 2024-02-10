@@ -95,7 +95,7 @@ export class UserService {
         .findById(id)
         .populate({
           path: 'cart',
-          model: 'Order',
+          model: 'Item',
         })
         .exec()
         .catch((err) => {
