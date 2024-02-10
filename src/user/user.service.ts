@@ -140,9 +140,14 @@ export class UserService {
           const existingItemIndex = user.cart.findIndex((itemId) => itemId === itemToAdd);
           if (existingItemIndex !== -1) {
             user.cart.splice(existingItemIndex, 1);
+            updateUserDto.cart = undefined
+          } else {
+            user.cart.push(itemToAdd);
+            updateUserDto.cart = undefined
           }
-          user.cart.push(itemToAdd);
         }
+        await user.save()
+
 
         if (orders) {
           const updatedOrders = [...user.orders, ...orders];
@@ -150,7 +155,7 @@ export class UserService {
         }
 
         updatedUser = await this.userModel
-          .findByIdAndUpdate(updateId, updateUserDto, { new: true })
+          .findByIdAndUpdate(updateId, updateUserDto, { new: true }).populate({ path: 'cart', model: 'Item' })
           .catch((err) => {
             console.log(err);
             throw new InternalServerErrorException(
