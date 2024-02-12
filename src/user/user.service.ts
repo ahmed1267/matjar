@@ -126,7 +126,7 @@ export class UserService {
 
   async update(updateUserDto: UpdateUserDto) {
     try {
-      const { currentId, updateId, cart, orders } = updateUserDto;
+      const { currentId, updateId, cart, orders, wishList } = updateUserDto;
       const user = await this.userModel.findById(currentId).catch((err) => {
         console.log(err);
         throw new NotFoundException('This user doesn\'t exist');
@@ -144,6 +144,17 @@ export class UserService {
           } else {
             user.cart.push(itemToAdd);
             updateUserDto.cart = undefined
+          }
+        }
+        if (wishList && wishList.length > 0) {
+          const itemToAddToWishList = wishList[0];
+          const existingItemIndexWish = user.wishList.findIndex((itemId) => itemId === itemToAddToWishList);
+          if (existingItemIndexWish !== -1) {
+            user.wishList.splice(existingItemIndexWish, 1);
+            updateUserDto.wishList = undefined
+          } else {
+            user.wishList.push(itemToAddToWishList);
+            updateUserDto.wishList = undefined
           }
         }
         await user.save()
