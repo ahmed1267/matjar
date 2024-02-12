@@ -96,6 +96,9 @@ export class UserService {
         .populate({
           path: 'cart',
           model: 'Item',
+        }).populate({
+          path: 'wishList',
+          model: 'Item',
         })
         .exec()
         .catch((err) => {
