@@ -70,4 +70,7 @@ export class CreateUserDto {
 
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   cart: Types.ObjectId[]
+
+  @Prop({ type: [Types.ObjectId], ref: 'Item' })
+  wishList: Types.ObjectId[]
 }

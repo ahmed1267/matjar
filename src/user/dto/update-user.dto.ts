@@ -67,7 +67,10 @@ export class UpdateUserDto {
 
   @Prop({ type: [Types.ObjectId], ref: 'Order' })
   orders?: string[]
-  
+
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   cart?: string[]
+
+  @Prop({ type: [Types.ObjectId], ref: 'Item' })
+  wishList?: string[]
 }

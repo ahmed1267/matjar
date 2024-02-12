@@ -27,9 +27,10 @@ export class ItemController {
     @Param('page') page: number,
     @Param('shop') shopID: string,
     @Query('category') category: string,
-    @Query('subCategorey') subCategorey: string
+    @Query('subCategorey') subCategorey: string,
+    @Query('sortOrder') sortOrder: string,
   ) {
-    return this.itemService.findAll(page, shopID, category, subCategorey);
+    return this.itemService.findAll(page, shopID, category, subCategorey, sortOrder);
   }
 
   @Get('one/:id')

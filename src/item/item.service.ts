@@ -41,23 +41,31 @@ export class ItemService {
     }
   }
 
-  async findAll(page: number, shopID?: string, category?: string, subCategorey?: string) {
+  async findAll(page: number, shopID?: string, category?: string, subCategory?: string, sortOrder?: string) {
     try {
-      const query = { shopID, category, subCategorey }
+      const query = { shopID, category, subCategory };
       for (let key in query) {
-        if (!query[key]) delete query[key]
+        if (!query[key]) delete query[key];
       }
 
-      const items = await this.itemModel.find({ ...query }).catch(err => {
-        console.log(err);
-        throw new InternalServerErrorException(err);
+      const sortCriteria = {};
+      if (sortOrder === 'asc') {
+        sortCriteria['price'] = 1;
+      } else if (sortOrder === 'desc') {
+        sortCriteria['price'] = -1;
+      }
 
-      });
-
-
+      const items = await this.itemModel
+        .find({ ...query })
+        .sort(sortCriteria)
+        .catch(err => {
+          console.log(err);
+          throw new InternalServerErrorException(err);
+        });
 
       const count = await this.itemModel
-        .find({ ...query }).countDocuments();
+        .find({ ...query })
+        .countDocuments();
 
       return { count, items };
     } catch (error) {
@@ -65,6 +73,7 @@ export class ItemService {
       throw new InternalServerErrorException(error);
     }
   }
+
 
   async findOne(id: string) {
     try {
@@ -82,18 +91,36 @@ export class ItemService {
 
   async update(id: string, updateItemDto: UpdateItemDto) {
     try {
-      const item = await this.itemModel.findByIdAndUpdate(id, updateItemDto, {
+      const { images, colors, sizes, category, ...rest } = updateItemDto;
+      const item = await this.itemModel.findByIdAndUpdate(id, rest, {
         new: true,
       }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
 
+
+      if (images && images.length > 0) {
+        item.images.push(...images);
+      }
+      if (colors && colors.length > 0) {
+        item.colors.push(...colors);
+      }
+      if (sizes && sizes.length > 0) {
+        item.sizes.push(...sizes);
+      }
+      if (category) {
+        item.category.push(...category);
+      }
+
+      await item.save();
+
       return item;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
+
 
   async remove(id: string) {
     try {
