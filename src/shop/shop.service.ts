@@ -226,52 +226,61 @@ export class ShopService {
           'An expected error happened while finding shop containers',
         );
       });
-      const containers = [];
-      shop.containers.forEach(async (container) => {
-        switch (container.containerType) {
+      let containers = {};
+      for(let i=0;i<shop.containers.length;i++) {
+        switch (shop.containers[i].containerType) {
           case 'review':
             const review = await this.reviewModel
-              .findById(container.containerID)
+              .findById(shop.containers[i].containerID)
+              .populate({path: "products", model: "Item"})
               .catch((err) => {
                 console.log(err);
                 throw new InternalServerErrorException(
                   'An expected error happened while finding shop containers',
                 );
               });
-            containers.push(review);
+            containers[`review${i}`]= review;
+            break;
           case 'product slider':
             const productSlider = await this.productSliderModel
-              .findById(container.containerID)
+              .findById(shop.containers[i].containerID)
+              .populate({path: "products", model: "Item"})
               .catch((err) => {
                 console.log(err);
                 throw new InternalServerErrorException(
                   'An expected error happened while finding shop containers',
                 );
               });
-            containers.push(productSlider);
-
+              containers[`productSlider${i}`]= productSlider;
+            break;
           case 'photo slider':
             const photoSlider = await this.photoSliderModel
-              .findById(container.containerID)
+              .findById(shop.containers[i].containerID)
+              .populate({path: "products", model: "Item"})
               .catch((err) => {
                 console.log(err);
                 throw new InternalServerErrorException(
                   'An expected error happened while finding shop containers',
                 );
               });
-            containers.push(photoSlider);
+              containers[`photoSlider${i}`]= photoSlider;
+            break;
           case 'card slider':
             const cardSlider = await this.cardSliderModel
-              .findById(container.containerID)
+              .findById(shop.containers[i].containerID)
+              .populate({path: "products", model: "Item"})
               .catch((err) => {
                 console.log(err);
                 throw new InternalServerErrorException(
                   'An expected error happened while finding shop containers',
                 );
               });
-            containers.push(cardSlider);
+              containers[`cardSlider${i}`]= cardSlider;
+            break;
         }
-      });
+        
+
+      };
       return containers;
     } catch (error) {
       console.log(error);

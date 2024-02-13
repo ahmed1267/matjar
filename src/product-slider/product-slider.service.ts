@@ -60,6 +60,7 @@ export class ProductSliderService {
 
 
       });
+      
       return productSlider;
     } catch (error) {
       console.log(error);
