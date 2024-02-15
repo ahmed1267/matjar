@@ -18,24 +18,36 @@ export class ReportsService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) { }
 
-  async findOne(id: string, report: string, year?: string, month?: string) {
-    const user = await this.userModel.findById(id).catch(err => {
-      console.log(err)
-      throw new InternalServerErrorException('Unexpected error happened while finding the user!')
-    })
-    if (user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
-    const shopId = user.shop
-    switch (report) {
-      case "monthlySales":
-        const reportYear = parseInt(year)
-        const reportMonth = parseInt(month)
-        return this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
-      case "itemSales":
-        return this.generateItemSalesReport(shopId)
-      case "itemRatings":
-        return this.getShopItemRatings(shopId)
-      case "orderMetrics":
-        return this.getShopOrdersMetrics(shopId)
+  async findOne(id: string, shopId: string, report: string, year?: string, month?: string) {
+    try {
+      const user = await this.userModel.findById(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException('Unexpected error happened while finding the user!')
+      })
+      if (user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
+      if(!user.shops.includes(shopId)) throw new UnauthorizedException("You can't get the reports for another user's shop!")
+      let result
+     
+      switch (report) {
+        case "monthlySales":
+          const reportYear = parseInt(year)
+          const reportMonth = parseInt(month)
+          result = this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
+          return {user ,result}
+        case "itemSales":
+          result= this.generateItemSalesReport(shopId)
+          return {user, result}
+        case "itemRatings":
+          result= this.getShopItemRatings(shopId)
+          return {user, result}
+        case "orderMetrics":
+          result = this.getShopOrdersMetrics(shopId)  
+          return {user, result}
+      }
+      
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException(error)
     }
   }
 

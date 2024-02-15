@@ -155,7 +155,7 @@ export class UserService {
       });
       if (!user) throw new NotFoundException('This user doesnt exist');
       if (user.role == 'admin' || userId == deleteId) {
-        for (const shopId of user.shop) {
+        for (const shopId of user.shops) {
           await this.shopService.remove(shopId);
         }
 

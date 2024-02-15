@@ -8,8 +8,8 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Body('report') report: string, @Body('year') year?:string, @Body('month') month?: string) {
-    return this.reportsService.findOne(id, year , month, report);
+  findOne(@Param('id') id: string, @Body ('shopId') shopId: string, @Body('report') report: string, @Body('year') year?:string, @Body('month') month?: string) {
+    return this.reportsService.findOne(id, shopId, report, year , month);
   }
 
   @Delete(':id')

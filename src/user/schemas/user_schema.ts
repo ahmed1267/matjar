@@ -70,8 +70,8 @@ export class User {
   @Prop({ type: [{ type: String, enum: ReadyOption }], isArray: true })
   ready: ReadyOption[];
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Shop' })
-  shop: string;
+  @Prop({ type:  [Types.ObjectId], ref: 'Shop' })
+  shops: string[];
 
   @Prop({ type: [Types.ObjectId], ref: 'User' })
   reviews: string[];
