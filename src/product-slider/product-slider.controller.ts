@@ -12,7 +12,7 @@ export class ProductSliderController {
     return this.productSliderService.create(createProductSliderDto);
   }
 
-  @Get(':id')
+  @Get('shop/:id')
   findAll(@Param('id') id: string) {
     return this.productSliderService.findAll(id);
   }
