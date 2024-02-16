@@ -31,6 +31,7 @@ import {
 } from 'src/category/schemas/category_schema';
 import { Item, ItemDocument } from 'src/item/schemas/item-schema';
 import { User, UserDocument } from 'src/user/schemas/user_schema';
+import { ReviewContainer, ReviewContainerDocument } from 'src/review-container/schemas/reviewContainer_schema';
 
 @Injectable()
 export class ShopService {
@@ -49,9 +50,8 @@ export class ShopService {
     private readonly cardSliderModel: mongoose.Model<CardSliderDocument>,
     @InjectModel(PhotoSlider.name)
     private readonly photoSliderModel: mongoose.Model<PhotoSliderDocument>,
-    @InjectModel(Review.name)
-    private readonly reviewModel: mongoose.Model<ReviewDocument>,
-  ) {}
+    @InjectModel(ReviewContainer.name) private reviewContainerModel: mongoose.Model<ReviewContainerDocument>,
+  ) { }
 
   async create(createShopDto: CreateShopDto) {
     try {
@@ -183,21 +183,21 @@ export class ShopService {
 
       for (const container of shop.containers) {
         switch (container.containerType) {
-          case 'productslider':
+          case 'product slider':
             await this.productSliderModel.findByIdAndDelete(
               container.containerID,
             );
             break;
-          case 'cardslider':
+          case 'card slider':
             await this.cardSliderModel.findByIdAndDelete(container.containerID);
             break;
-          case 'photoslider':
+          case 'photo slider':
             await this.photoSliderModel.findByIdAndDelete(
               container.containerID,
             );
             break;
-          case 'review':
-            await this.reviewModel.findByIdAndDelete(container.containerID);
+          case 'review container':
+            await this.reviewContainerModel.findByIdAndDelete(container.containerID);
             break;
         }
       }
@@ -226,52 +226,24 @@ export class ShopService {
           'An expected error happened while finding shop containers',
         );
       });
-      const containers = [];
-      shop.containers.forEach(async (container) => {
+      let containers = [];
+      await Promise.all(shop.containers.map(async (container) => {
         switch (container.containerType) {
-          case 'review':
-            const review = await this.reviewModel
-              .findById(container.containerID)
-              .catch((err) => {
-                console.log(err);
-                throw new InternalServerErrorException(
-                  'An expected error happened while finding shop containers',
-                );
-              });
-            containers.push(review);
+          case 'review container':
+            containers.push((await this.reviewContainerModel.findById(container.containerID)).populate('item user'));
+            break;
           case 'product slider':
-            const productSlider = await this.productSliderModel
-              .findById(container.containerID)
-              .catch((err) => {
-                console.log(err);
-                throw new InternalServerErrorException(
-                  'An expected error happened while finding shop containers',
-                );
-              });
-            containers.push(productSlider);
-
+            containers.push((await this.productSliderModel.findById(container.containerID)));
+            break;
           case 'photo slider':
-            const photoSlider = await this.photoSliderModel
-              .findById(container.containerID)
-              .catch((err) => {
-                console.log(err);
-                throw new InternalServerErrorException(
-                  'An expected error happened while finding shop containers',
-                );
-              });
-            containers.push(photoSlider);
+            containers.push(await this.photoSliderModel.findById(container.containerID));
+            break;
           case 'card slider':
-            const cardSlider = await this.cardSliderModel
-              .findById(container.containerID)
-              .catch((err) => {
-                console.log(err);
-                throw new InternalServerErrorException(
-                  'An expected error happened while finding shop containers',
-                );
-              });
-            containers.push(cardSlider);
+            containers.push(await this.cardSliderModel.findById(container.containerID));
+            break;
         }
-      });
+      }));
+
       return containers;
     } catch (error) {
       console.log(error);
