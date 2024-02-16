@@ -249,20 +249,20 @@ export class ShopService {
           case 'product slider':
             const productSlider = ((await this.productSliderModel.findById(container.containerID)))
             if (productSlider) {
-              productSlider.populate({ path: "products", model: "Item" })
-              containers.push({ type: "product sldier", container: productSlider })
+              productSlider.populate("products")
+              containers.push({ type: "product slider", container: productSlider })
             };
             break;
           case 'photo slider':
             const photoSlider = ((await this.photoSliderModel.findById(container.containerID)))
             if (photoSlider) {
-              containers.push({ type: "photo sldier", container: photoSlider })
+              containers.push({ type: "photo slider", container: photoSlider })
             };
             break;
           case 'card slider':
             const cardSlider = ((await this.cardSliderModel.findById(container.containerID)))
             if (cardSlider) {
-              containers.push({ type: "card sldier", container: cardSlider })
+              containers.push({ type: "card slider", container: cardSlider })
             };
             break;
         }
