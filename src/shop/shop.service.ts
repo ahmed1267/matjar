@@ -240,16 +240,30 @@ export class ShopService {
       await Promise.all(shop.containers.map(async (container) => {
         switch (container.containerType) {
           case 'review container':
-            containers.push((await this.reviewContainerModel.findById(container.containerID)).populate('item user'));
+            const reviewContainer = ((await this.reviewContainerModel.findById(container.containerID)))
+            if (reviewContainer) {
+              (await reviewContainer.populate({ path: "item", model: "Item" })).populate({ path: 'user', model: "User" })
+              containers.push({ type: "review container", container: reviewContainer })
+            };
             break;
           case 'product slider':
-            containers.push((await this.productSliderModel.findById(container.containerID)));
+            const productSlider = ((await this.productSliderModel.findById(container.containerID)))
+            if (productSlider) {
+              productSlider.populate({ path: "products", model: "Item" })
+              containers.push({ type: "product sldier", container: productSlider })
+            };
             break;
           case 'photo slider':
-            containers.push(await this.photoSliderModel.findById(container.containerID));
+            const photoSlider = ((await this.photoSliderModel.findById(container.containerID)))
+            if (photoSlider) {
+              containers.push({ type: "photo sldier", container: photoSlider })
+            };
             break;
           case 'card slider':
-            containers.push(await this.cardSliderModel.findById(container.containerID));
+            const cardSlider = ((await this.cardSliderModel.findById(container.containerID)))
+            if (cardSlider) {
+              containers.push({ type: "card sldier", container: cardSlider })
+            };
             break;
         }
       }));

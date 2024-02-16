@@ -15,11 +15,16 @@ export class PhotoSliderService {
 
   async create(createPhotoSliderDto: CreatePhotoSliderDto) {
     try {
-      const photoSlider = await new this.photoSliderModel(CreatePhotoSliderDto).save();
+
+      const photoSlider = await this.photoSliderModel.create(createPhotoSliderDto).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
       const shop = await this.shopModel.findById(createPhotoSliderDto.shop);
       shop.containers.push({ containerID: photoSlider.id, containerType: 'photo slider' });
       await shop.save();
-      return photoSlider;
+
+      return photoSlider
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException(
@@ -64,6 +69,8 @@ export class PhotoSliderService {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
+      console.log(photoSlider);
+
 
       return photoSlider;
     } catch (error) {

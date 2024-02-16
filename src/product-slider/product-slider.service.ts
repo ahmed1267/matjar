@@ -15,6 +15,7 @@ export class ProductSliderService {
 
   async create(createProductSliderDto: CreateProductSliderDto) {
     try {
+
       const productSlider = await new this.productSliderModel(createProductSliderDto).save();
       const shop = await this.shopModel.findById(createProductSliderDto.shop);
       shop.containers.push({ containerID: productSlider.id, containerType: 'product slider' });
@@ -60,7 +61,7 @@ export class ProductSliderService {
 
 
       });
-      
+
       return productSlider;
     } catch (error) {
       console.log(error);
