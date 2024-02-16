@@ -30,7 +30,7 @@ import {
   CategoryDocument,
 } from 'src/category/schemas/category_schema';
 import { Item, ItemDocument } from 'src/item/schemas/item-schema';
-import { User, UserDocument } from 'src/user/schemas/user_schema';
+import { User, UserDocument, UserRole } from 'src/user/schemas/user_schema';
 import { ReviewContainer, ReviewContainerDocument } from 'src/review-container/schemas/reviewContainer_schema';
 
 @Injectable()
