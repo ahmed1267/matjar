@@ -90,6 +90,7 @@ export class ProductSliderService {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
+      if (!productSlider) throw new InternalServerErrorException("this slider doesn't exist")
       const shop = await this.shopModel.findById(productSlider.shop).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
