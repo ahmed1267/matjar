@@ -12,7 +12,7 @@ export class CardSliderController {
     return this.cardSliderService.create(createCardSliderDto);
   }
 
-  @Get(':id')
+  @Get('shop/:id')
   findAll(@Param('id') id: string) {
     return this.cardSliderService.findAll(id);
   }

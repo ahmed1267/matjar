@@ -9,10 +9,15 @@ export type CardSliderDocument = CardSlider & Document;
     timestamps: true, // Add timestamps for createdAt and updatedAt
 })
 export class CardSlider {
+    @Prop()
     links: string[]
+    @Prop()
     photos: string[]
+    @Prop()
     buttonsLinks: string[]
+    @Prop()
     buttonsTitles: string[]
+    @Prop()
     titles: string[]
     @Prop({ type: Types.ObjectId, ref: 'Shop' })
     shop: string;
