@@ -61,6 +61,16 @@ export class ShopService {
           console.log(err);
           throw new InternalServerErrorException(err);
         });
+      const user = await this.userModel.findById(createShopDto.userID).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      user.shops.push(shop._id)
+      user.role = UserRole.SHOP_OWNER
+      await user.save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
 
       return shop;
     } catch (error) {

@@ -34,6 +34,9 @@ export class UpdateUserDto {
   @IsString({ message: 'A user must have a string password' })
   password?: string;
 
+  @Prop({ type: [Types.ObjectId], ref: 'Shop' })
+  shops?: Types.ObjectId[];
+
   @IsOptional()
   @IsEnum(UserRole, { message: 'Invalid user role' })
   role?: UserRole;

@@ -17,7 +17,7 @@ export class ProductSliderController {
     return this.productSliderService.findAll(id);
   }
 
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: string) {
     return this.productSliderService.findOne(id);
   }
