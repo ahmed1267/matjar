@@ -19,6 +19,7 @@ import { ReviewContainerModule } from './review-container/review-container.modul
 import { CardSliderModule } from './card-slider/card-slider.module';
 import { CategoryModule } from './category/category.module';
 import { ReviewModule } from './review/review.module';
+import { CardModule } from './card/card.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { ReviewModule } from './review/review.module';
     CategoryModule,
     ReviewModule,
     PassportModule,
+    CardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

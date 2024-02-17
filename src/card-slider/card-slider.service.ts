@@ -5,12 +5,14 @@ import { CardSlider, CardSliderDocument } from './schemas/cardSlider_schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
+import { Card, CardDocument } from 'src/card/schemas/card_schema';
 
 @Injectable()
 export class CardSliderService {
   constructor(
     @InjectModel(CardSlider.name) private cardSliderModel: Model<CardSliderDocument>,
     @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
+    @InjectModel(Card.name) private cardModel: Model<CardDocument>,
   ) { }
 
   async create(createCardSliderDto: CreateCardSliderDto) {
@@ -22,15 +24,13 @@ export class CardSliderService {
       return cardSlider;
     } catch (err) {
       console.log(err);
-      throw new InternalServerErrorException(
-        err
-      );
+      throw new InternalServerErrorException(err);
     }
   }
 
   async findAll(id: string) {
     try {
-      const cardSliders = await this.cardSliderModel.find({ shop: id }).catch(err => {
+      const cardSliders = await this.cardSliderModel.find({ shop: id }).populate({ path: 'cards', model: 'Card' }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
@@ -43,7 +43,7 @@ export class CardSliderService {
 
   async findOne(id: string) {
     try {
-      const cardSlider = await this.cardSliderModel.findById(id).catch(err => {
+      const cardSlider = await this.cardSliderModel.findById(id).populate({ path: 'cards', model: 'Card' }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
 
@@ -60,7 +60,7 @@ export class CardSliderService {
     try {
       const cardSlider = await this.cardSliderModel.findByIdAndUpdate(id, updateCardSliderDto, {
         new: true,
-      }).catch(err => {
+      }).populate({ path: 'cards', model: 'Card' }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
@@ -77,6 +77,14 @@ export class CardSliderService {
       throw new InternalServerErrorException(err);
     });
     if (!cardSlider) throw new InternalServerErrorException("this slider doesn't exist")
+    await this.cardModel.deleteMany({
+      _id: {
+        $in: cardSlider.cards
+      }
+    }).catch(err => {
+      console.log(err);
+      throw new InternalServerErrorException(err);
+    })
 
     const shop = await this.shopModel.findById(cardSlider.shop).catch(err => {
       console.log(err);
@@ -94,6 +102,6 @@ export class CardSliderService {
       console.log(err);
       throw new InternalServerErrorException(err);
     })
-    return cardSlider;
+    return 'cardSlider deleted successfully';
   }
 }
