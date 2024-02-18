@@ -46,11 +46,10 @@ export class OrderService {
       for (let key in query) {
         if (!query[key]) delete query[key]
       }
-
-      const orders = await this.orderModel.find({ ...query }).populate({ path: "buyerId", select: "name, email" }).populate({
+      const orders = await this.orderModel.find({ ...query }).populate({ path: "buyerId", model: "User", select: "name email" }).populate({
         path: 'items.itemId',
         model: 'Item',
-      }).exec().catch(err => {
+      }).populate({ path: "sellerId", model: "User", select: "name email" }).exec().catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
