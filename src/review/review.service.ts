@@ -29,7 +29,7 @@ export class ReviewService {
       for (let key in query) {
         if (!query[key]) delete query[key]
       }
-      const reviews = await this.reviewModel.find({ ...query }).exec().catch(err => {
+      const reviews = await this.reviewModel.find({ ...query }).populate({ path: "user", model: "User", select: "name" }).exec().catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       });
@@ -43,7 +43,7 @@ export class ReviewService {
 
   async findOne(id: string) {
     try {
-      const review = await this.reviewModel.findById(id).catch(err => {
+      const review = await this.reviewModel.findById(id).populate({ path: "user", model: "User", select: "name" }).catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
@@ -56,7 +56,7 @@ export class ReviewService {
 
   async update(id: string, updateReviewDto: UpdateReviewDto) {
     try {
-      const review = await this.reviewModel.findByIdAndUpdate(id, updateReviewDto).catch(err => {
+      const review = await this.reviewModel.findByIdAndUpdate(id, updateReviewDto).populate({ path: "user", model: "User", select: "name" }).catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
