@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 
 import { CouponService } from './coupon.service';
@@ -16,16 +17,16 @@ import { Types } from 'mongoose';
 
 @Controller('coupon')
 export class CouponController {
-  constructor(private readonly couponService: CouponService) {}
+  constructor(private readonly couponService: CouponService) { }
 
   @Post()
   create(@Body() createCouponDto: CreateCouponDto) {
     return this.couponService.create(createCouponDto);
   }
 
-  @Get()
-  findAll() {
-    return this.couponService.findAll();
+  @Get(':id')
+  findAll(@Param("id") id: Types.ObjectId, @Query('page') page?: number) {
+    return this.couponService.findAll(id, page);
   }
 
   @Patch('/discount')
