@@ -38,6 +38,11 @@ export class ProductSliderService {
           model: 'Item',
           select: 'name price description images',
         })
+        .populate({
+          path: 'shop',
+          model: 'Shop',
+          select: 'title',
+        })
         .exec()
         .catch((err) => {
           console.log(err);
