@@ -45,7 +45,7 @@ export class Coupon {
   @Prop({ required: true, type: [Types.ObjectId], ref: 'Item', maxlength: 100 })
   items: string[];
 
-  @Prop({ type: [Types.ObjectId], ref: 'Customer', maxlength: 100 })
+  @Prop({ type: [Types.ObjectId], ref: 'User', maxlength: 100 })
   subscriptCustomers?: Types.ObjectId[];
 }
 
