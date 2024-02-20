@@ -22,7 +22,7 @@ export class ItemController {
     return this.itemService.create(createItemDto);
   }
 
-  @Get(':shop/:page')
+  @Get('all-items/:shop/:page')
   findAll(
     @Param('page') page: number,
     @Param('shop') shopID: string,
@@ -30,10 +30,11 @@ export class ItemController {
     @Query('subCategorey') subCategorey: string,
     @Query('sortOrder') sortOrder: string,
   ) {
+
     return this.itemService.findAll(page, shopID, category, subCategorey, sortOrder);
   }
 
-  @Get('one/:id')
+  @Get('one-item/:id')
   findOne(@Param('id') id: string) {
     return this.itemService.findOne(id);
   }

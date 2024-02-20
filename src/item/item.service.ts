@@ -10,7 +10,7 @@ import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
 @Injectable()
 export class ItemService {
   constructor(
-    @InjectModel(Item.name) private readonly itemModel: Model<ItemDocument>,
+    @InjectModel(Item.name) private itemModel: Model<ItemDocument>,
     @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
   ) { }
 
@@ -83,6 +83,7 @@ export class ItemService {
 
 
       });
+      if (!item) throw new InternalServerErrorException('Item not found!');
       return item;
     } catch (error) {
       throw new InternalServerErrorException(error);
