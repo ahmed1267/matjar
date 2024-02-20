@@ -21,11 +21,11 @@ export class CouponService {
     }
   }
 
-  async findAll(page: number = 0, user?: Types.ObjectId) {
+  async findAll(shop: Types.ObjectId, page: number = 0,) {
     try {
       const coupons = await this.couponModel
         .find({
-          user,
+          shop,
         })
         .limit(10)
         .skip(10 * page).catch(err => {
@@ -65,7 +65,7 @@ export class CouponService {
 
   async remove(id: Types.ObjectId) {
     try {
-      const coupon = await this.couponModel.findByIdAndRemove(id);
+      const coupon = await this.couponModel.findByIdAndDelete(id);
 
       return coupon;
     } catch (error) {
