@@ -31,6 +31,7 @@ import {
   ReviewContainerSchema,
 } from 'src/review-container/schemas/reviewContainer_schema';
 import { ReviewContainerModule } from 'src/review-container/review-container.module';
+import { Card, CardSchema } from 'src/card/schemas/card_schema';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ReviewContainerModule } from 'src/review-container/review-container.mod
       { name: PhotoSlider.name, schema: PhotoSliderSchema },
       { name: Review.name, schema: ReviewSchema },
       { name: ReviewContainer.name, schema: ReviewContainerSchema },
+      { name: Card.name, schema: CardSchema },
     ]),
     AuthModule,
     ReviewContainerModule,
@@ -57,4 +59,4 @@ import { ReviewContainerModule } from 'src/review-container/review-container.mod
   controllers: [ShopController],
   providers: [ShopService],
 })
-export class ShopModule {}
+export class ShopModule { }

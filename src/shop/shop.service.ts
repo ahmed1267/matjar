@@ -32,6 +32,7 @@ import {
 import { Item, ItemDocument } from 'src/item/schemas/item-schema';
 import { User, UserDocument, UserRole } from 'src/user/schemas/user_schema';
 import { ReviewContainer, ReviewContainerDocument } from 'src/review-container/schemas/reviewContainer_schema';
+import { Card, CardDocument } from 'src/card/schemas/card_schema';
 
 @Injectable()
 export class ShopService {
@@ -47,6 +48,8 @@ export class ShopService {
     @InjectModel(ProductSlider.name)
     private readonly productSliderModel: mongoose.Model<ProductSliderDocument>,
     @InjectModel(CardSlider.name)
+    private readonly cardModel: mongoose.Model<CardDocument>,
+    @InjectModel(Card.name)
     private readonly cardSliderModel: mongoose.Model<CardSliderDocument>,
     @InjectModel(PhotoSlider.name)
     private readonly photoSliderModel: mongoose.Model<PhotoSliderDocument>,
@@ -249,7 +252,7 @@ export class ShopService {
           case 'product slider':
             const productSlider = ((await this.productSliderModel.findById(container.containerID)))
             if (productSlider) {
-              productSlider.populate("products")
+              productSlider.populate({ path: "products", model: "Item" })
               containers.push({ type: "product slider", container: productSlider })
             };
             break;
@@ -262,6 +265,7 @@ export class ShopService {
           case 'card slider':
             const cardSlider = ((await this.cardSliderModel.findById(container.containerID)))
             if (cardSlider) {
+              cardSlider.populate({ path: "cards", model: "Card" })
               containers.push({ type: "card slider", container: cardSlider })
             };
             break;

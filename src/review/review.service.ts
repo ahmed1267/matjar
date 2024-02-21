@@ -4,11 +4,13 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Review, ReviewDocument } from './schemas/review_schema';
+import { User, UserDocument } from 'src/user/schemas/user_schema';
 
 @Injectable()
 export class ReviewService {
   constructor(
     @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) { }
   async create(createReviewDto: CreateReviewDto) {
     try {
@@ -73,10 +75,14 @@ export class ReviewService {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
+      const user = await this.userModel.findById(userId).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException(err)
+      })
 
       if (review.shop == userId) throw new BadRequestException('You cant delete reviews from your own shop!')
 
-      if (review.user != userId) throw new BadRequestException('You cant delete this review!')
+      if (review.user != userId || user.role != "admin") throw new BadRequestException('You cant delete this review!')
 
       await this.reviewModel.deleteOne({ id }).catch(err => {
         console.log(err)
