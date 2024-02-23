@@ -34,7 +34,7 @@ export class Item {
   brand: string;
 
   @Prop({ min: 0, max: 5 })
-  rating: number;
+  rating?: number;
 
   @Prop()
   sizes: string[];
