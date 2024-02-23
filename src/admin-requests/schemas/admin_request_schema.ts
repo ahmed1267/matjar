@@ -22,7 +22,7 @@ export class AdminRequest {
     @Prop()
     info: string;
     @Prop()
-    adminId: string;
+    adminId?: string;
     @Prop()
     userId: string;
 }

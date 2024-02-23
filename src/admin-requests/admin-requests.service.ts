@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateAdminRequestDto } from './dto/create-admin-request.dto';
 import { UpdateAdminRequestDto } from './dto/update-admin-request.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -28,10 +28,14 @@ export class AdminRequestsService {
 
   async findAll(userId?: string) {
     try {
-      const requests = await this.adminRequestModel.find({ userId }).catch(err => {
+      let query = {}
+      query["userId"] = userId
+      if (userId == undefined) delete query["userId"]
+      const requests = await this.adminRequestModel.find(query).catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
+
       return requests;
     } catch (error) {
       console.log(error);
@@ -70,12 +74,17 @@ export class AdminRequestsService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string, userId: string) {
     try {
-      await this.adminRequestModel.findByIdAndDelete(id).catch(err => {
+      const user = await this.userModel.findById(userId).catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
+      const request = await this.adminRequestModel.findById(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException(err)
+      })
+      if (!user || user.role != UserRole.ADMIN || user.id != request.userId) throw new BadRequestException("You can't delete this request")
       return "Request deleted successfully"
     } catch (error) {
       console.log(error)

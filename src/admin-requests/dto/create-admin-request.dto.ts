@@ -14,7 +14,5 @@ export class CreateAdminRequestDto {
     @IsString()
     info: string;
     @IsString()
-    adminId: string;
-    @IsString()
     userId: string;
 }

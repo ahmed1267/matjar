@@ -253,7 +253,7 @@ export class ShopService {
           case 'review container':
             const reviewContainer = ((await this.reviewContainerModel.findById(container.containerID)))
             if (reviewContainer) {
-              (await reviewContainer.populate({ path: "item", model: "Item" })).populate({ path: 'user', model: "User" })
+              (await reviewContainer.populate({ path: "review", model: "Review" }))
               containers.push({ type: "review container", container: reviewContainer })
             };
             break;

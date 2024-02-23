@@ -28,7 +28,7 @@ export class AdminRequestsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminRequestsService.remove(+id);
+  remove(@Query("userId") userId: string, @Param('id') id: string) {
+    return this.adminRequestsService.remove(id, userId);
   }
 }

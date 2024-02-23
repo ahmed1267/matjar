@@ -52,7 +52,7 @@ export class ShopController {
   }
 
   @Get('containers/:id')
-  findShopContainers(@Param('userId') id: string) {
+  findShopContainers(@Param('id') id: string) {
     return this.shopService.findShopContainers(id)
   }
 
