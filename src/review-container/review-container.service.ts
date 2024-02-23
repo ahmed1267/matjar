@@ -23,11 +23,13 @@ export class ReviewContainerService {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
+
       const review = await this.reviewModel.findById(created.review[0]).catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
       const shop = await this.shopModel.findById(review.shop);
+
       shop.containers.push({ containerID: created.id, containerType: 'review container' });
       await shop.save();
       return 'Review Container created successfully!'
@@ -41,7 +43,9 @@ export class ReviewContainerService {
 
   async findAll(shop?: string) {
     try {
-      const reviewContainer = await this.reviewContainerModel.find({ shop }).catch(err => {
+      let query = {}
+      if (shop != undefined) query["shop"] = shop
+      const reviewContainer = await this.reviewContainerModel.find(query).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
@@ -93,29 +97,35 @@ export class ReviewContainerService {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
+
+
       const shop = await this.shopModel.findById(review.shop).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
 
       })
-      for (let i = 0; i < shop.containers.length; i++) {
-        if (shop.containers[i].containerID === id) {
-          shop.containers.splice(i, 1);
-          break;
+      if (shop) {
+        for (let i = 0; i < shop.containers.length; i++) {
+          if (shop.containers[i].containerID === id) {
+            shop.containers.splice(i, 1);
+            break;
+          }
         }
+        await shop.save();
       }
-      await shop.save();
       const user = await this.userModel.findById(review.user).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
-      for (let i = 0; i < user.reviews.length; i++) {
-        if (user.reviews[i] === id) {
-          user.reviews.splice(i, 1);
-          break;
+      if (user) {
+        for (let i = 0; i < user.reviews.length; i++) {
+          if (user.reviews[i] === id) {
+            user.reviews.splice(i, 1);
+            break;
+          }
         }
+        await user.save();
       }
-      await user.save();
       await this.reviewContainerModel.findByIdAndDelete(id).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);

@@ -10,6 +10,9 @@ export type ReviewContainerDocument = ReviewContainer & Document;
     timestamps: true, // Add timestamps for createdAt and updatedAt
 })
 export class ReviewContainer {
+    @Prop({ required: true, type: Types.ObjectId, ref: 'Shop' })
+    shop: string;
+
     @Prop({ required: true, type: Types.ObjectId, ref: 'Review' })
     review: string[]
 }
