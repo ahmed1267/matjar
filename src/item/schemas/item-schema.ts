@@ -47,6 +47,9 @@ export class Item {
 
   @Prop()
   subCategories: string[]
+
+  @Prop()
+  priceAfter: number;
 }
 
 // Create the Mongoose schema for the user class

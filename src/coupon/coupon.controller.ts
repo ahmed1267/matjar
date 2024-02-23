@@ -29,10 +29,10 @@ export class CouponController {
     return this.couponService.findAll(id, page);
   }
 
-  @Patch('/discount')
-  changeDiscount(@Body() updateCouponDto: UpdateCouponDto) {
+  @Patch('/discount/:id')
+  changeDiscount(@Param() id: string, @Body() updateCouponDto: UpdateCouponDto) {
     return this.couponService.changeDiscount(
-      updateCouponDto.id,
+      id,
       updateCouponDto.discountPercentage,
     );
   }

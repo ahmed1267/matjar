@@ -13,7 +13,10 @@ export class CouponService {
 
   async create(createCouponDto: CreateCouponDto) {
     try {
-      const coupon = await new this.couponModel(createCouponDto).save();
+      const coupon = await new this.couponModel(createCouponDto).save().catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      });
 
       return coupon;
     } catch (error) {
@@ -101,7 +104,7 @@ export class CouponService {
     }
   }
 
-  async changeDiscount(id: Types.ObjectId, discount: number) {
+  async changeDiscount(id: string, discount: number) {
     try {
       const coupon = await this.couponModel.findByIdAndUpdate(id, {
         discountPercentage: discount,

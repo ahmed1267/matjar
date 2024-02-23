@@ -20,6 +20,7 @@ import { CardSliderModule } from './card-slider/card-slider.module';
 import { CategoryModule } from './category/category.module';
 import { ReviewModule } from './review/review.module';
 import { CardModule } from './card/card.module';
+import { IntroPageModule } from './intro-page/intro-page.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { CardModule } from './card/card.module';
     ReviewModule,
     PassportModule,
     CardModule,
+    IntroPageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

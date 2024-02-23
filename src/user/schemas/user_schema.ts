@@ -70,7 +70,7 @@ export class User {
   @Prop({ type: [{ type: String, enum: ReadyOption }], isArray: true })
   ready: ReadyOption[];
 
-  @Prop({ type:  [Types.ObjectId], ref: 'Shop' })
+  @Prop({ type: [Types.ObjectId], ref: 'Shop' })
   shops: string[];
 
   @Prop({ type: [Types.ObjectId], ref: 'User' })
@@ -87,6 +87,8 @@ export class User {
 
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   wishList: string[]
+
+
 }
 
 // Create the Mongoose schema for the user class

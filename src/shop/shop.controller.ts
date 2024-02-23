@@ -47,12 +47,12 @@ export class ShopController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.shopService.remove(id);
+  remove(@Param('id') id: string, @Body('id') userId: string) {
+    return this.shopService.remove(id, userId);
   }
 
   @Get('containers/:id')
-  findShopContainers(@Param('id') id: string) {
+  findShopContainers(@Param('userId') id: string) {
     return this.shopService.findShopContainers(id)
   }
 

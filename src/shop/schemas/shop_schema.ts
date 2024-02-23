@@ -32,6 +32,8 @@ export class Shop {
     containerID: string,
     containerType: string,
   }]
+  @Prop()
+  introPages: string[];
 }
 
 // Create the Mongoose schema for the Movie class

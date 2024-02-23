@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import * as mongoose from 'mongoose';
@@ -175,7 +176,7 @@ export class ShopService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
     try {
       const shop = await this.shopModel.findById(id).catch((err) => {
         console.log(err);
@@ -187,6 +188,12 @@ export class ShopService {
       if (!shop) {
         throw new NotFoundException('Shop not found');
       }
+      const user = await this.userModel.findById(userId).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      if (shop.userID != userId || user.role == UserRole.ADMIN) throw new UnauthorizedException('You dont have the permission to delete this shop')
+
 
       await this.itemModel.deleteMany({ _id: { $in: shop.itemsIDs } });
 

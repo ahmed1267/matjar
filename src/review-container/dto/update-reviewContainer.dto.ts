@@ -4,5 +4,5 @@ import { IsNotEmpty } from 'class-validator';
 
 export class UpdateReviewContainerDto extends PartialType(CreateReviewContainerDto) {
     @IsNotEmpty({ message: 'A review container must have a refrence review' })
-    review: string
+    review: string[];
 }

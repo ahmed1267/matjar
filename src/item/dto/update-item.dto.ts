@@ -11,7 +11,7 @@ export class UpdateItemDto extends PartialType(CreateItemDto) {
     @IsNumber()
     amount: number;
     @IsString()
-    userID: string;
+    shopID: string;
     @IsString()
     description: string;
     @IsArray({ message: "Item categories must be an array" })

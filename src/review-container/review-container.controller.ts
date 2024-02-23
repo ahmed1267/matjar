@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ReviewContainerService } from './review-container.service';
 import { CreateReviewContainerDto } from './dto/create-reviewContainer.dto';
 import { UpdateReviewContainerDto } from './dto/update-reviewContainer.dto';
@@ -13,8 +13,8 @@ export class ReviewContainerController {
   }
 
   @Get()
-  findAll() {
-    return this.reviewService.findAll();
+  findAll(@Query("shop") shop?: string) {
+    return this.reviewService.findAll(shop);
   }
 
   @Get(':id')

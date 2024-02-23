@@ -19,21 +19,15 @@ export class ReviewContainerService {
   ) { }
   async create(createReviewContainerDto: CreateReviewContainerDto) {
     try {
-      const refrenceReview = await this.reviewModel.findById(createReviewContainerDto.review)
-      const reviewContainer = {
-        review: refrenceReview.id,
-        title: refrenceReview.title,
-        shop: refrenceReview.shop,
-        user: refrenceReview.user,
-        item: refrenceReview.item,
-        rating: refrenceReview.rating,
-        desciption: refrenceReview.description
-      }
-      const created = await new this.reviewContainerModel(reviewContainer).save().catch(err => {
+      const created = await new this.reviewContainerModel(createReviewContainerDto).save().catch(err => {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
-      const shop = await this.shopModel.findById(reviewContainer.shop);
+      const review = await this.reviewModel.findById(created.review[0]).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException(err)
+      })
+      const shop = await this.shopModel.findById(review.shop);
       shop.containers.push({ containerID: created.id, containerType: 'review container' });
       await shop.save();
       return 'Review Container created successfully!'
@@ -45,9 +39,9 @@ export class ReviewContainerService {
     }
   }
 
-  async findAll() {
+  async findAll(shop?: string) {
     try {
-      const reviewContainer = await this.reviewContainerModel.find().catch(err => {
+      const reviewContainer = await this.reviewContainerModel.find({ shop }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
@@ -75,14 +69,15 @@ export class ReviewContainerService {
 
   async update(id: string, updatereviewContainerDto: UpdateReviewContainerDto) {
     try {
-      const reviewContainer = await this.reviewContainerModel.findByIdAndUpdate(id, updatereviewContainerDto, {
+
+      const created = await this.reviewContainerModel.findByIdAndUpdate(id, updatereviewContainerDto, {
         new: true,
       }).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
 
-      return reviewContainer;
+      return created;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -94,7 +89,11 @@ export class ReviewContainerService {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
-      const shop = await this.shopModel.findById(reviewContainer.shop).catch(err => {
+      const review = await this.reviewModel.findById(reviewContainer.review[0]).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      const shop = await this.shopModel.findById(review.shop).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
 
@@ -106,7 +105,7 @@ export class ReviewContainerService {
         }
       }
       await shop.save();
-      const user = await this.userModel.findById(reviewContainer.user).catch(err => {
+      const user = await this.userModel.findById(review.user).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
@@ -121,7 +120,7 @@ export class ReviewContainerService {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
-      return reviewContainer;
+      return "Review container deleted successfully";
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
