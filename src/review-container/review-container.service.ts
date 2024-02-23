@@ -33,7 +33,7 @@ export class ReviewContainerService {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
-      const shop = await this.shopModel.findById(createReviewContainerDto.shop);
+      const shop = await this.shopModel.findById(reviewContainer.shop);
       shop.containers.push({ containerID: created.id, containerType: 'review container' });
       await shop.save();
       return 'Review Container created successfully!'

@@ -222,6 +222,7 @@ export class UserService {
 
 
       user.orders.push(createdOrder._id);
+      user.cart = [];
       await user.save();
 
       return "Order created successfully!";
