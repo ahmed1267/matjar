@@ -88,6 +88,14 @@ export class User {
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   wishList: string[]
 
+  @Prop()
+  twitter: string
+
+  @Prop()
+  facebook: string
+
+  @Prop()
+  instagram: string
 
 }
 

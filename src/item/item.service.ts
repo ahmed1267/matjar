@@ -58,6 +58,8 @@ export class ItemService {
       const items = await this.itemModel
         .find({ ...query })
         .sort(sortCriteria)
+        .limit(10)
+        .skip(page * 10)
         .catch(err => {
           console.log(err);
           throw new InternalServerErrorException(err);

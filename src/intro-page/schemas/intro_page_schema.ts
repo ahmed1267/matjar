@@ -18,4 +18,4 @@ export class IntroPage {
     shop: string;
 }
 
-export const IntroSchema = SchemaFactory.createForClass(IntroPage);
+export const IntroPageSchema = SchemaFactory.createForClass(IntroPage);

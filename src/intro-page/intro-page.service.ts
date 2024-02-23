@@ -52,7 +52,7 @@ export class IntroPageService {
     }
   }
 
-  async update(id: number, updateIntroPageDto: UpdateIntroPageDto) {
+  async update(id: string, updateIntroPageDto: UpdateIntroPageDto) {
     try {
       const introPage = await this.introPageModel.findByIdAndUpdate(id, updateIntroPageDto).catch(err => {
         console.log(err);

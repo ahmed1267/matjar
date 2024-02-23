@@ -191,7 +191,7 @@ export class UserService {
 
 
 
-  async checkOut(id: string, sellerID: string, shop: string) {
+  async checkOut(id: string) {
     try {
       const user = await this.userModel.findById(id).exec();
       if (!user) {
@@ -199,7 +199,10 @@ export class UserService {
       }
 
       const itemsInCart = await this.itemModel.find({ _id: { $in: user.cart } }).exec();
-
+      const shop = await this.shopService.findOne(itemsInCart[0].shopID).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException('Failed to find shop');
+      });
       let totalPrice = 0;
       itemsInCart.forEach(item => {
         totalPrice += item.price;
@@ -207,13 +210,13 @@ export class UserService {
 
       const orderDto: CreateOrderDto = {
         buyerId: id,
-        sellerId: sellerID,
+        sellerId: shop.userID,
         items: itemsInCart.map(item => ({ itemID: item._id.toString(), price: item.price })) as Types.Array<{ itemID: string; price: number; }>,
         deliveryType: false,
         paid: false,
         status: OrderStatusTypes.INPROGRESS,
         comments: 'Sample comment',
-        shopId: shop,
+        shopId: itemsInCart[0].shopID,
         priceTotal: totalPrice
       };
 

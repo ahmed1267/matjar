@@ -24,7 +24,7 @@ export class IntroPageController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateIntroPageDto: UpdateIntroPageDto) {
-    return this.introPageService.update(+id, updateIntroPageDto);
+    return this.introPageService.update(id, updateIntroPageDto);
   }
 
   @Delete(':id')

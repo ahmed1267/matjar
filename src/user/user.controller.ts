@@ -58,8 +58,8 @@ export class UserController {
   }
 
   @Patch('/checkout/:id')
-  checkout(@Param('id') id: string, @Body('sellerID') sellerID: string, @Body('shop') shop: string) {
-    return this.userService.checkOut(id, sellerID, shop);
+  checkout(@Param('id') id: string) {
+    return this.userService.checkOut(id);
   }
 
   @Patch()

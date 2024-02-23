@@ -75,4 +75,13 @@ export class CreateUserDto {
 
   @Prop({ type: [Types.ObjectId], ref: 'Item' })
   wishList: Types.ObjectId[]
+
+  @Prop()
+  twitter: string;
+
+  @Prop()
+  facebook: string;
+
+  @Prop()
+  instagram: string;
 }
