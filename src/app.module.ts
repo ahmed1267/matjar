@@ -21,6 +21,7 @@ import { CategoryModule } from './category/category.module';
 import { ReviewModule } from './review/review.module';
 import { CardModule } from './card/card.module';
 import { IntroPageModule } from './intro-page/intro-page.module';
+import { AdminRequestsModule } from './admin-requests/admin-requests.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { IntroPageModule } from './intro-page/intro-page.module';
     PassportModule,
     CardModule,
     IntroPageModule,
+    AdminRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

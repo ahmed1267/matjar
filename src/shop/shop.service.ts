@@ -246,6 +246,7 @@ export class ShopService {
           'An expected error happened while finding shop containers',
         );
       });
+      if (!shop) throw new BadRequestException("This shop doesn't exist")
       let containers = [];
       await Promise.all(shop.containers.map(async (container) => {
         switch (container.containerType) {
