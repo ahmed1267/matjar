@@ -13,7 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './schemas/user_schema';
+import { User, UserDocument, UserRole } from './schemas/user_schema';
 import * as bcrypt from 'bcrypt';
 import { ShopService } from 'src/user/shop.service';
 import { Order, OrderDocument, OrderStatusTypes } from 'src/order/schemas/order_schema';
@@ -243,9 +243,17 @@ export class UserService {
       });
       if (!user) throw new NotFoundException('This user doesnt exist');
       if (user.role == 'admin' || userId == deleteId) {
-        for (const shopId of user.shops) {
-          await this.shopService.remove(shopId);
+        if (user.role == UserRole.SHOP_OWNER) {
+          for (const shopId of user.shops) {
+            await this.shopService.remove(shopId);
+          }
+
         }
+
+        for (const orderId of user.orders) {
+          await this.orderModel.findByIdAndDelete(orderId);
+        }
+
 
         const deletedUser = await this.userModel
           .findByIdAndDelete(deleteId)

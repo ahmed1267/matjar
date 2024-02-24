@@ -29,9 +29,12 @@ export class ItemController {
     @Query('category') category: string,
     @Query('subCategorey') subCategorey: string,
     @Query('sortOrder') sortOrder: string,
+    @Query('minPrice') minPrice?: number,
+    @Query('maxPrice') maxPrice?: number,
   ) {
 
-    return this.itemService.findAll(page, shopID, category, subCategorey, sortOrder);
+
+    return this.itemService.findAll(page, shopID, category, subCategorey, sortOrder, minPrice, maxPrice);
   }
 
   @Get('one-item/:id')

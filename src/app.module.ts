@@ -22,6 +22,7 @@ import { ReviewModule } from './review/review.module';
 import { CardModule } from './card/card.module';
 import { IntroPageModule } from './intro-page/intro-page.module';
 import { AdminRequestsModule } from './admin-requests/admin-requests.module';
+import { VideoContainerModule } from './video-container/video-container.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { AdminRequestsModule } from './admin-requests/admin-requests.module';
     CardModule,
     IntroPageModule,
     AdminRequestsModule,
+    VideoContainerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

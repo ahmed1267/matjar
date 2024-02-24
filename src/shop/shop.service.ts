@@ -34,6 +34,7 @@ import { Item, ItemDocument } from 'src/item/schemas/item-schema';
 import { User, UserDocument, UserRole } from 'src/user/schemas/user_schema';
 import { ReviewContainer, ReviewContainerDocument } from 'src/review-container/schemas/reviewContainer_schema';
 import { Card, CardDocument } from 'src/card/schemas/card_schema';
+import { VideoContainer, VideoContainerDocument } from 'src/video-container/schemas/videoContainer-schema';
 
 @Injectable()
 export class ShopService {
@@ -55,6 +56,8 @@ export class ShopService {
     @InjectModel(PhotoSlider.name)
     private readonly photoSliderModel: mongoose.Model<PhotoSliderDocument>,
     @InjectModel(ReviewContainer.name) private reviewContainerModel: mongoose.Model<ReviewContainerDocument>,
+    @InjectModel(VideoContainer.name)
+    private readonly videoContainerModel: mongoose.Model<VideoContainerDocument>,
   ) { }
 
   async create(createShopDto: CreateShopDto) {
@@ -219,6 +222,10 @@ export class ShopService {
           case 'review container':
             await this.reviewContainerModel.findByIdAndDelete(container.containerID);
             break;
+
+          case 'video container':
+            await this.videoContainerModel.findByIdAndDelete(container.containerID);
+            break;
         }
       }
 
@@ -260,7 +267,7 @@ export class ShopService {
           case 'product slider':
             const productSlider = ((await this.productSliderModel.findById(container.containerID)))
             if (productSlider) {
-              productSlider.populate({ path: "products", model: "Item" })
+              await productSlider.populate({ path: "products", model: "Item" })
               containers.push({ type: "product slider", container: productSlider })
             };
             break;
@@ -273,9 +280,17 @@ export class ShopService {
           case 'card slider':
             const cardSlider = ((await this.cardSliderModel.findById(container.containerID)))
             if (cardSlider) {
-              cardSlider.populate({ path: "cards", model: "Card" })
+              await cardSlider.populate({ path: "cards", model: "Card" })
               containers.push({ type: "card slider", container: cardSlider })
             };
+            break;
+
+          case 'video container':
+            const videoContainer = await this.videoContainerModel.findById(container.containerID).catch(err => {
+              console.log(err);
+              throw new InternalServerErrorException(err)
+            })
+            containers.push({ type: "video container", container: videoContainer })
             break;
         }
       }));

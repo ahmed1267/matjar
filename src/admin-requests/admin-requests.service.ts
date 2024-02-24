@@ -84,7 +84,12 @@ export class AdminRequestsService {
         console.log(err)
         throw new InternalServerErrorException(err)
       })
+      if (!request) throw new BadRequestException("This request doesn't exist")
       if (!user || user.role != UserRole.ADMIN || user.id != request.userId) throw new BadRequestException("You can't delete this request")
+      await this.adminRequestModel.findByIdAndDelete(id).catch(err => {
+        console.log(err)
+        throw new InternalServerErrorException(err)
+      })
       return "Request deleted successfully"
     } catch (error) {
       console.log(error)

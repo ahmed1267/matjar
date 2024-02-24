@@ -32,6 +32,7 @@ import {
 } from 'src/review-container/schemas/reviewContainer_schema';
 import { ReviewContainerModule } from 'src/review-container/review-container.module';
 import { Card, CardSchema } from 'src/card/schemas/card_schema';
+import { VideoContainer, VideoContainerSchema } from 'src/video-container/schemas/videoContainer-schema';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { Card, CardSchema } from 'src/card/schemas/card_schema';
       { name: Review.name, schema: ReviewSchema },
       { name: ReviewContainer.name, schema: ReviewContainerSchema },
       { name: Card.name, schema: CardSchema },
+      { name: VideoContainer.name, schema: VideoContainerSchema },
     ]),
     AuthModule,
     ReviewContainerModule,

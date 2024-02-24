@@ -41,40 +41,54 @@ export class ItemService {
     }
   }
 
-  async findAll(page: number, shopID?: string, category?: string, subCategory?: string, sortOrder?: string) {
+  async findAll(
+    page: number,
+    shopID?: string,
+    category?: string,
+    subCategory?: string,
+    sortOrder?: string,
+    minPrice?: number,
+    maxPrice?: number,
+  ) {
     try {
-      const query = { shopID, category, subCategory };
-      for (let key in query) {
-        if (!query[key]) delete query[key];
+      const query: any = { shopID, category, subCategory };
+
+      // Remove undefined or null values from the query object
+      Object.keys(query).forEach(key => query[key] == null && delete query[key]);
+
+      // Add minimum and maximum price filters to the query
+      if (minPrice !== undefined) {
+        query.price = { ...query.price, $gte: minPrice }; // Minimum price filter
+      }
+      if (maxPrice !== undefined) {
+        query.price = { ...query.price, $lte: maxPrice }; // Maximum price filter
       }
 
-      const sortCriteria = {};
+      // Construct sort criteria based on sortOrder
+      const sortCriteria: any = {};
       if (sortOrder === 'asc') {
         sortCriteria['price'] = 1;
       } else if (sortOrder === 'desc') {
         sortCriteria['price'] = -1;
       }
 
+      // Find items based on the constructed query and sort criteria
       const items = await this.itemModel
-        .find({ ...query })
+        .find(query)
         .sort(sortCriteria)
         .limit(10)
-        .skip(page * 10)
-        .catch(err => {
-          console.log(err);
-          throw new InternalServerErrorException(err);
-        });
+        .skip(page * 10);
 
-      const count = await this.itemModel
-        .find({ ...query })
-        .countDocuments();
+      // Count the total number of matching items
+      const count = await this.itemModel.countDocuments(query);
 
       return { count, items };
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException(error);
+      console.error(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
+
 
 
   async findOne(id: string) {
