@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category, CategoryDocument } from './schemas/category_schema';
@@ -19,7 +19,7 @@ export class CategoryService {
         throw new InternalServerErrorException(err)
       })
       if (shop.userID != id) {
-        throw new InternalServerErrorException('You are not authorized to create a category for this shop')
+        throw new UnauthorizedException('You are not authorized to create a category for this shop')
       }
       const category = await this.categoryModel.create(createCategoryDto).catch(err => {
         console.log(err);
