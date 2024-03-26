@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { Model, Types } from 'mongoose';
@@ -14,8 +14,14 @@ export class CouponService {
   async create(createCouponDto: CreateCouponDto) {
     try {
       const coupon = await new this.couponModel(createCouponDto).save().catch(err => {
-        console.log(err);
-        throw new InternalServerErrorException(err);
+        if (err.code == 11000) {
+          console.log(err);
+          throw new InternalServerErrorException('This coupon already exists');
+        } else {
+
+          console.log(err);
+          throw new InternalServerErrorException(err);
+        }
       });
 
       return coupon;
@@ -70,7 +76,7 @@ export class CouponService {
     try {
       const coupon = await this.couponModel.findByIdAndDelete(id);
 
-      return coupon;
+      return 'The coupon was deleted successfully';
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -83,7 +89,7 @@ export class CouponService {
           subscriptCustomers: customer,
         },
       });
-
+      if (!updatedCoupon) throw new NotFoundException("This coupon doesn't exist!")
       return updatedCoupon;
     } catch (error) {
       throw new InternalServerErrorException(error, "Can't Add Customer");
@@ -97,7 +103,7 @@ export class CouponService {
           items: item,
         },
       });
-
+      if (!updatedCoupon) throw new NotFoundException("This coupon doesn't exist!")
       return updatedCoupon;
     } catch (error) {
       throw new InternalServerErrorException(error, "Can't Add Item");
@@ -106,11 +112,11 @@ export class CouponService {
 
   async changeDiscount(id: string, discount: number) {
     try {
-      const coupon = await this.couponModel.findByIdAndUpdate(id, {
+      const updatedCoupon = await this.couponModel.findByIdAndUpdate(id, {
         discountPercentage: discount,
       });
-
-      return coupon;
+      if (!updatedCoupon) throw new NotFoundException("This coupon doesn't exist!")
+      return updatedCoupon;
     } catch (error) {
       throw new InternalServerErrorException(error, "Can't Add Item");
     }

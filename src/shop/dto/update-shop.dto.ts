@@ -19,14 +19,10 @@ export class UpdateShopDto extends PartialType(CreateShopDto) {
   description: string;
   itemsIDs: string[];
   // Shop category, must not be empty and should be an array of strings
-  @IsNotEmpty({ message: 'A shop must have at least one category' })
-  @IsArray({ message: 'A shop must have a string array category' })
   categories: string[];
 
-  @IsArray({ message: 'A shop must have a string array containers' })
   containers: Object[];
 
-  @IsArray({ message: 'A shop must have a string array custommers' })
   customers: string[];
 
 }

@@ -62,8 +62,7 @@ export class ShopService {
 
   async create(createShopDto: CreateShopDto) {
     try {
-      const shop = await new this.shopModel(createShopDto)
-        .save()
+      const shop = await this.shopModel.create(createShopDto)
         .catch((err) => {
           console.log(err);
           throw new InternalServerErrorException(err);
@@ -72,7 +71,9 @@ export class ShopService {
         console.log(err);
         throw new InternalServerErrorException(err);
       })
-      user.shops.push(shop._id)
+      if (!user) throw new NotFoundException('There is no user with this id')
+
+      user.shop = shop._id
       user.role = UserRole.SHOP_OWNER
       await user.save().catch(err => {
         console.log(err);
@@ -200,8 +201,6 @@ export class ShopService {
 
       await this.itemModel.deleteMany({ _id: { $in: shop.itemsIDs } });
 
-      await this.userModel.deleteMany({ _id: { $in: shop.customers } });
-
       await this.categoryModel.deleteMany({ _id: { $in: shop.categories } });
 
       for (const container of shop.containers) {
@@ -238,7 +237,7 @@ export class ShopService {
           );
         });
 
-      return deletedShop;
+      return 'Shop was deleted successfully';
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(error);

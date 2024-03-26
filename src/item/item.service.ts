@@ -42,7 +42,7 @@ export class ItemService {
   }
 
   async findAll(
-    page: number,
+    page?: number,
     shopID?: string,
     category?: string,
     subCategory?: string,
@@ -57,13 +57,14 @@ export class ItemService {
       Object.keys(query).forEach(key => query[key] == null && delete query[key]);
 
       // Add minimum and maximum price filters to the query
-      if (minPrice !== undefined) {
-        query.price = { ...query.price, $gte: minPrice }; // Minimum price filter
+      if (minPrice !== undefined && maxPrice !== undefined) {
+        query.price = { $gte: minPrice, $lte: maxPrice }; // Minimum and maximum price filter
+      } else if (minPrice !== undefined) {
+        query.price = { $gte: minPrice }; // Minimum price filter
+      } else if (maxPrice !== undefined) {
+        query.price = { $lte: maxPrice }; // Maximum price filter
       }
-      if (maxPrice !== undefined) {
-        query.price = { ...query.price, $lte: maxPrice }; // Maximum price filter
-      }
-
+      if (!page) page = 0
       // Construct sort criteria based on sortOrder
       const sortCriteria: any = {};
       if (sortOrder === 'asc') {
@@ -77,7 +78,11 @@ export class ItemService {
         .find(query)
         .sort(sortCriteria)
         .limit(10)
-        .skip(page * 10);
+        .skip(page * 10)
+        .catch(err => {
+          console.log(err);
+          throw new InternalServerErrorException(err);
+        });
 
       // Count the total number of matching items
       const count = await this.itemModel.countDocuments(query);
@@ -141,11 +146,11 @@ export class ItemService {
 
   async remove(id: string) {
     try {
-      const item = await this.itemModel.findByIdAndRemove(id).catch(err => {
+      await this.itemModel.findByIdAndDelete(id).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);
       });
-      return item;
+      return 'The item has been deleted successfully';
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

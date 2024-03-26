@@ -54,8 +54,8 @@ export class CreateUserDto {
   })
   firstShop: boolean;
 
-  @Prop({ type: [Types.ObjectId], ref: 'Shop' })
-  shops: Types.ObjectId[];
+  @Prop({ type: Types.ObjectId, ref: 'Shop' })
+  shop: Types.ObjectId;
 
   @IsEnum(UserExperienceType, { message: 'Invalid Experience Type' })
   userExperienceType: UserExperienceType;

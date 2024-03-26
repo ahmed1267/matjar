@@ -1,26 +1,24 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-
 import { DateTime } from 'luxon';
+import { Types } from 'mongoose';
 
 @Schema({
   timestamps: true,
 })
 export class Coupon {
-  @Prop({ required: true, minlength: 8, maxlength: 50 })
+  @Prop({ required: true, unique: true, minlength: 3, maxlength: 50 })
   text: string;
 
   @Prop({
     required: true,
     default: DateTime.now().plus({ days: 10 }).toJSDate(),
   })
-  endDate: Date;
+  endDate: String;
 
   @Prop({
     required: true,
     default: 1,
     min: 1,
-    max: 100,
   })
   numOfTimes: number;
 

@@ -22,9 +22,9 @@ export class ItemController {
     return this.itemService.create(createItemDto);
   }
 
-  @Get('all-items/:shop/:page')
+  @Get('all-items/:shop/')
   findAll(
-    @Param('page') page: number,
+    @Query('page') page: number,
     @Param('shop') shopID: string,
     @Query('category') category: string,
     @Query('subCategorey') subCategorey: string,
