@@ -25,26 +25,26 @@ export class ReportsService {
         throw new InternalServerErrorException('Unexpected error happened while finding the user!')
       })
       if (user.role != 'shop_owner') throw new UnauthorizedException("You don't have a shop")
-      if(!user.shops.includes(shopId)) throw new UnauthorizedException("You can't get the reports for another user's shop!")
+      if (user.shop != shopId) throw new UnauthorizedException("You can't get the reports for another user's shop!")
       let result
-     
+
       switch (report) {
         case "monthlySales":
           const reportYear = parseInt(year)
           const reportMonth = parseInt(month)
           result = this.generateMonthlySalesReport(shopId, reportYear, reportMonth)
-          return {user ,result}
+          return { user, result }
         case "itemSales":
-          result= this.generateItemSalesReport(shopId)
-          return {user, result}
+          result = this.generateItemSalesReport(shopId)
+          return { user, result }
         case "itemRatings":
-          result= this.getShopItemRatings(shopId)
-          return {user, result}
+          result = this.getShopItemRatings(shopId)
+          return { user, result }
         case "orderMetrics":
-          result = this.getShopOrdersMetrics(shopId)  
-          return {user, result}
+          result = this.getShopOrdersMetrics(shopId)
+          return { user, result }
       }
-      
+
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException(error)
