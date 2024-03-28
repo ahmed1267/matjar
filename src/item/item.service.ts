@@ -1,19 +1,27 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item, ItemDocument } from './schemas/item-schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Shop, ShopDocument } from 'src/shop/schemas/shop_schema';
+import { JwtService } from '@nestjs/jwt';
+import { User, UserDocument } from 'src/user/schemas/user_schema';
 
 @Injectable()
 export class ItemService {
   constructor(
     @InjectModel(Item.name) private itemModel: Model<ItemDocument>,
     @InjectModel(Shop.name) private shopModel: Model<ShopDocument>,
+    @InjectModel(User.name)
+    private readonly userModel: mongoose.Model<UserDocument>,
+    private readonly jwtService: JwtService
   ) { }
 
+  private decodeToken(token: string) {
+    return this.jwtService.decode<{ userId: string; username: string }>(token);
+  }
   async create(createItemDto: CreateItemDto) {
     try {
       const item = await new this.itemModel(createItemDto).save().catch(err => {
@@ -111,10 +119,23 @@ export class ItemService {
     }
   }
 
-  async update(id: string, updateItemDto: UpdateItemDto) {
+  async update(id: string, updateItemDto: UpdateItemDto, request: any) {
     try {
+      const item = await this.itemModel.findById(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      const userEmail = this.decodeToken(request.headers.authorization.split(' ')[1]).username
+      const user = await this.userModel.findOne({ email: userEmail }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      if (!user) throw new NotFoundException('There is no user with this id')
+      if (user.role !== 'admin' || user.shop != item.shopID) throw new NotFoundException('You are not authorized to perform this action')
+
+
       const { images, colors, sizes, category, ...rest } = updateItemDto;
-      const item = await this.itemModel.findByIdAndUpdate(id, rest, {
+      const updatedItem = await this.itemModel.findByIdAndUpdate(id, rest, {
         new: true,
       }).catch(err => {
         console.log(err);
@@ -123,29 +144,40 @@ export class ItemService {
 
 
       if (images && images.length > 0) {
-        item.images.push(...images);
+        updatedItem.images.push(...images);
       }
       if (colors && colors.length > 0) {
-        item.colors.push(...colors);
+        updatedItem.colors.push(...colors);
       }
       if (sizes && sizes.length > 0) {
-        item.sizes.push(...sizes);
+        updatedItem.sizes.push(...sizes);
       }
       if (category) {
-        item.category.push(...category);
+        updatedItem.category.push(...category);
       }
 
-      await item.save();
+      await updatedItem.save();
 
-      return item;
+      return updatedItem;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
 
 
-  async remove(id: string) {
+  async remove(id: string, request: any) {
     try {
+      const item = await this.itemModel.findById(id).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      const userEmail = this.decodeToken(request.headers.authorization.split(' ')[1]).username
+      const user = await this.userModel.findOne({ email: userEmail }).catch(err => {
+        console.log(err);
+        throw new InternalServerErrorException(err);
+      })
+      if (!user) throw new NotFoundException('There is no user with this id')
+      if (user.shop != item.shopID) throw new NotFoundException('You are not authorized to perform this action')
       await this.itemModel.findByIdAndDelete(id).catch(err => {
         console.log(err);
         throw new InternalServerErrorException(err);

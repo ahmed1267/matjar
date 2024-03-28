@@ -12,9 +12,7 @@ export class CreateShopDto {
   @IsString({ message: 'A shop must have a string title' })
   title: string;
 
-  @IsNotEmpty({ message: 'A shop must have a title' })
-  @IsString({ message: 'A shop must have a string title' })
-  userID: string;
+  userID?: string;
 
   // Shop description, must not be empty, and should be a string
   @IsNotEmpty({ message: 'A shop must have a description' })

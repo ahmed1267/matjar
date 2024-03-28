@@ -33,6 +33,7 @@ import {
 import { ReviewContainerModule } from 'src/review-container/review-container.module';
 import { Card, CardSchema } from 'src/card/schemas/card_schema';
 import { VideoContainer, VideoContainerSchema } from 'src/video-container/schemas/videoContainer-schema';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -49,6 +50,10 @@ import { VideoContainer, VideoContainerSchema } from 'src/video-container/schema
       { name: Card.name, schema: CardSchema },
       { name: VideoContainer.name, schema: VideoContainerSchema },
     ]),
+    JwtModule.register({
+      secret: `${process.env.SECRET}`,
+      signOptions: { expiresIn: '1h' },
+    }),
     AuthModule,
     ReviewContainerModule,
     ProductSliderModule,

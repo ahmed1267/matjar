@@ -3,10 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
+    if (!request.headers.authorization) return false;
     const token = request.headers.authorization.split(' ')[1];
     const isValidToken = await this.validate(token);
     if (!isValidToken) return false;
